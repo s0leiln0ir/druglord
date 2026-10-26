@@ -1,0 +1,1699 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Drug Lord">
+<meta name="theme-color" content="#008080">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; font: 14px system-ui, -apple-system, sans-serif; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+html { background: #008080; }
+</style>
+</head>
+<body>
+<title>Drug Lord</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: one Windows 98 dialog on a teal desktop. Wide screens keep the original three-column window; phones stack the panels. */
+:root {
+  --desk: #008080; --face: #c0c0c0; --light: #dfdfdf; --white: #ffffff; --shadow: #808080; --dark: #0a0a0a;
+  --title: #000080; --title2: #1084d0; --sel: #000080; --ink: #000000; --dim: #808080;
+  --good: #008000; --bad: #ff0000; --sys: #ff0080; --tip: #ffffe1;
+  --ui: Tahoma, "MS Sans Serif", "Segoe UI", Geneva, Verdana, sans-serif;
+  --rich: Arial, Helvetica, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--desk); color: var(--ink); font: 12px/1.3 var(--ui); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 28px; }
+button, input, select { font: inherit; color: inherit; }
+
+/* chrome */
+.raised { background: var(--face); box-shadow: inset -1px -1px var(--dark), inset 1px 1px var(--white), inset -2px -2px var(--shadow), inset 2px 2px var(--light); }
+.sunken { box-shadow: inset -1px -1px var(--white), inset 1px 1px var(--shadow), inset -2px -2px var(--light), inset 2px 2px var(--dark); }
+.win { max-width: 780px; margin: 0 auto; padding: 3px; }
+.titlebar { display: flex; align-items: center; gap: 6px; padding: 3px 3px 3px 4px; color: var(--white); font-weight: bold;
+  background: linear-gradient(90deg, var(--title), var(--title2)); user-select: none; }
+.titlebar .ico { width: 16px; height: 16px; flex: none; }
+.titlebar .t { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-btn { width: 16px; height: 14px; padding: 0; border: 0; display: grid; place-items: center; font: bold 9px/1 var(--ui); color: var(--ink); }
+.body { padding: 6px; display: grid; gap: 6px; }
+
+.group { position: relative; border: 0; margin: 0; padding: 12px 8px 8px; min-width: 0;
+  box-shadow: inset -1px -1px var(--white), inset 1px 1px var(--shadow), inset -2px -2px var(--shadow), inset 2px 2px var(--white); }
+.group > .legend { position: absolute; top: -7px; left: 7px; padding: 0 3px; background: var(--face); line-height: 14px; }
+
+.btn { min-height: 23px; padding: 3px 8px; border: 0; background: var(--face); cursor: pointer; text-align: center; white-space: nowrap;
+  box-shadow: inset -1px -1px var(--dark), inset 1px 1px var(--white), inset -2px -2px var(--shadow), inset 2px 2px var(--light); }
+.btn:active:not(:disabled), .btn.down { box-shadow: inset -1px -1px var(--white), inset 1px 1px var(--dark), inset -2px -2px var(--light), inset 2px 2px var(--shadow); padding: 4px 7px 2px 9px; }
+.btn:focus-visible { outline: 1px dotted var(--ink); outline-offset: -5px; }
+.btn:disabled { color: var(--shadow); text-shadow: 1px 1px var(--white); cursor: default; }
+.btn u { text-decoration: underline; }
+
+/* info log */
+.log { background: var(--white); height: 128px; overflow-y: auto; padding: 4px 6px; font: 13px/1.35 var(--rich); }
+.log p { margin: 0 0 2px; }
+.log .good { color: var(--good); } .log .bad { color: var(--bad); } .log .sys { color: var(--sys); font-weight: bold; }
+
+/* list views */
+.lv { background: var(--white); overflow: auto; min-height: 0; position: relative; }
+.lv table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: inherit; min-width: var(--minw, 0); }
+.lv th { position: sticky; top: 0; z-index: 1; font-weight: normal; text-align: left; padding: 2px 6px; background: var(--face); white-space: nowrap; overflow: hidden;
+  box-shadow: inset -1px -1px var(--dark), inset 1px 1px var(--white), inset -2px -2px var(--shadow); }
+.lv td { padding: 1px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; cursor: default; }
+.lv th.n, .lv td.n { text-align: right; }
+.lv tr.sel td { background: var(--sel); color: var(--white); }
+.lv tr.off td { color: var(--dim); }
+.lv tr.sel.off td { color: var(--light); }
+.lv .empty { padding: 8px 6px; color: var(--dim); }
+.arw { display: inline-block; width: 0; height: 0; margin-right: 5px; vertical-align: 1px; border: 4px solid transparent; }
+.arw.up { border-bottom: 6px solid var(--good); border-top: 0; }
+.arw.dn { border-top: 6px solid var(--bad); border-bottom: 0; }
+.arw.eq { border: 0; width: 8px; height: 2px; background: var(--dim); vertical-align: 3px; }
+
+/* main layout */
+.main { display: grid; grid-template-columns: minmax(0,1fr) 112px minmax(0,1fr); grid-template-areas: "info info info" "market mid right"; gap: 6px; }
+.a-info { grid-area: info; } .a-market { grid-area: market; } .a-mid { grid-area: mid; } .a-right { grid-area: right; }
+.a-market { display: flex; flex-direction: column; }
+.a-market .lv { flex: 1; min-height: 300px; }
+.a-mid, .play { display: flex; flex-direction: column; gap: 10px; }
+.stack { display: flex; flex-direction: column; gap: 4px; }
+.a-right { display: grid; grid-template-rows: auto auto; gap: 10px; align-content: start; }
+.stock .lv { height: 148px; }
+.chk { display: flex; align-items: center; gap: 5px; padding: 2px 0 4px 4px; }
+
+.status { display: grid; gap: 3px; }
+.cell { padding: 3px 6px; display: flex; gap: 6px; align-items: center; min-width: 0; }
+.cell b { font-weight: normal; color: var(--ink); flex: none; }
+.cell span { font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.srow { display: grid; grid-template-columns: 1fr 1.6fr; gap: 3px; }
+.money { display: grid; grid-template-columns: minmax(0,1fr) 150px; gap: 4px; }
+.tabs, #bGame { display: none; }
+.tab { border: 0; background: var(--face); padding: 4px 12px 3px; margin-right: -2px; position: relative; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+  box-shadow: inset -1px 0 var(--dark), inset 1px 1px var(--white), inset -2px 0 var(--shadow); border-radius: 3px 3px 0 0; top: 2px; }
+.tab[aria-selected="true"] { top: 0; padding-bottom: 5px; z-index: 1; font-weight: bold; }
+.tab:focus-visible { outline: 1px dotted var(--ink); outline-offset: -4px; }
+.money .stack { gap: 3px; }
+[hidden] { display: none !important; }
+.hist { background: var(--white); display: flex; flex-direction: column; height: 132px; min-width: 0; }
+.money { align-items: start; }
+.hist .lbl { font-size: 10px; padding: 1px 3px 0; color: var(--title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; align-self: center; }
+.hist canvas { flex: 1; width: 100%; min-height: 0; display: block; cursor: pointer; }
+.htabs { display: flex; align-items: stretch; background: var(--face); box-shadow: inset 0 -1px var(--shadow); }
+.htab { border: 0; background: var(--face); font-size: 10px; padding: 1px 6px; cursor: pointer; color: var(--ink); box-shadow: inset -1px 0 var(--shadow); }
+.htab[aria-selected="true"] { background: var(--white); font-weight: bold; box-shadow: inset -1px 0 var(--shadow), inset 0 1px var(--white); }
+.htab[hidden] { display: none; }
+.htab:focus-visible { outline: 1px dotted var(--ink); outline-offset: -2px; }
+.wlist { flex: 1; min-height: 0; overflow-y: auto; font-size: 10.5px; padding: 1px 3px; display: grid; grid-template-columns: minmax(0,1fr) auto; align-content: start; column-gap: 6px; grid-auto-rows: 14px; font-variant-numeric: tabular-nums; }
+.wlist span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 14px; }
+.wlist .p { text-align: right; }
+.wlist .here { font-weight: bold; color: var(--title); }
+.wlist .lo { color: var(--good); } .wlist .hi { color: var(--bad); }
+.wlist .none { grid-column: 1 / -1; grid-row: span 3; color: var(--dim); white-space: normal; }
+
+.bar { height: 14px; padding: 2px; background: var(--white); flex: 1; min-width: 0; }
+.bar i { display: block; height: 100%; background: repeating-linear-gradient(90deg, var(--title) 0 7px, transparent 7px 9px); }
+.bar.low i { background: repeating-linear-gradient(90deg, var(--bad) 0 7px, transparent 7px 9px); }
+
+/* popup menus */
+.menu { position: fixed; z-index: 60; min-width: 170px; padding: 2px; max-height: 70vh; overflow-y: auto; }
+.menu button { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 4px 20px 4px 22px; cursor: default; white-space: nowrap; }
+.menu button:hover:not(:disabled), .menu button:focus-visible { background: var(--sel); color: var(--white); outline: none; }
+.menu button:disabled { color: var(--shadow); text-shadow: 1px 1px var(--white); }
+
+/* dialogs */
+.veil { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 12px; overflow-y: auto; }
+.veil.dim { background: rgba(0,0,0,0.08); }
+.dlg { width: min(100%, var(--w, 420px)); padding: 3px; }
+.dlg .body { padding: 8px; gap: 8px; }
+.row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.row.end { justify-content: flex-end; }
+.row .btn { min-width: 75px; }
+.cols { display: grid; gap: 8px; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: stretch; }
+.cols .mv { display: flex; flex-direction: column; gap: 4px; justify-content: flex-start; padding-top: 4px; }
+.msg { background: transparent; padding: 2px; white-space: pre-wrap; }
+.field { background: var(--white); border: 0; padding: 3px 4px; min-width: 0; }
+.field:focus-visible { outline: 1px dotted var(--ink); }
+select.field { padding: 2px; }
+.radios { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.radios label, .chk { cursor: pointer; }
+.note { color: var(--ink); }
+.big { font-size: 13px; }
+.flog { background: var(--white); height: 150px; overflow-y: auto; padding: 4px 6px; font: 13px/1.35 var(--rich); }
+.flog p { margin: 0 0 2px; } .flog .good { color: var(--good); } .flog .bad { color: var(--bad); }
+.docs { background: var(--white); max-height: 60vh; overflow-y: auto; padding: 8px 12px; font: 13px/1.5 var(--rich); }
+.docs h3 { margin: 12px 0 2px; font-size: 14px; color: var(--title); } .docs h3:first-child { margin-top: 0; }
+.docs p { margin: 0 0 6px; max-width: 65ch; }
+.docs table { border-collapse: collapse; font-size: 12px; } .docs td, .docs th { padding: 1px 8px 1px 0; text-align: left; font-variant-numeric: tabular-nums; }
+.chart { background: var(--white); height: 260px; } .chart canvas { width: 100%; height: 100%; display: block; }
+input[type=range] { width: 100%; accent-color: var(--title); }
+.tag { color: var(--dim); }
+
+@media (max-width: 760px) {
+  body { padding-block: 6px; height: 100%; }
+  .win { height: 100%; display: flex; flex-direction: column; }
+  .main { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 5px; padding: 4px; }
+  .a-mid, .a-right, .play .group, .play .stack { display: contents; }
+  .group { padding: 9px 6px 6px; }
+  .a-info { order: 1; flex: 1 1 0; min-height: 84px; display: flex; flex-direction: column; }
+  .a-info .log { flex: 1; height: auto; min-height: 0; }
+  .status-g { order: 2; flex: none; }
+  .tabs { order: 3; display: flex; flex: none; padding-left: 2px; margin-bottom: -6px; margin-top: 2px; }
+  .tab { flex: 1 1 0; }
+  .a-market, .stock { order: 4; flex: 2.6 1 0; min-height: 150px; display: flex; flex-direction: column; padding-top: 6px; }
+  .main:not([data-tab="stock"]) .stock, .main[data-tab="stock"] .a-market { display: none; }
+  .a-market > .legend, .stock > .legend { display: none; }
+  .a-market .lv, .stock .lv { flex: 1; min-height: 0; height: auto; }
+  .gamegrp { display: none; }
+  .play { order: 5; flex: none; display: grid; grid-template-columns: repeat(10, minmax(0,1fr)); gap: 4px; padding-top: 2px; }
+  .play .legend { display: none; }
+  .play .btn { grid-column: span 2; padding-inline: 2px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  #bStay, #bFly { grid-column: span 4; font-weight: bold; }
+  #bGame { display: block; grid-column: span 2; }
+  .log { font-size: 12.5px; padding: 3px 5px; }
+  .status { grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-areas: "loc loc" "day rank" "cash bank" "debt hp" "mini mini"; gap: 3px; }
+  .status .srow, .status .money, .status .money > .stack { display: contents; }
+  .c-loc { grid-area: loc; } .c-hp { grid-area: hp; } .c-day { grid-area: day; } .c-rank { grid-area: rank; }
+  .c-cash { grid-area: cash; } .c-bank { grid-area: bank; } .c-debt { grid-area: debt; } #mini { grid-area: mini; height: 112px; }
+  .wlist { grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) auto; font-size: 11px; grid-auto-rows: 12px; column-gap: 5px; }
+  .wlist span { line-height: 12px; }
+  .hist .lbl { font-size: 11px; }
+  .cell { padding: 2px 5px; gap: 4px; }
+  .c-hp .bar { height: 12px; }
+  .dlg .lv { --minw: 0; }
+  .dlg .wide table { --minw: 460px; }
+  .cols { grid-template-columns: minmax(0,1fr); }
+  .cols .mv { flex-direction: row; padding-top: 0; }
+  .cols .mv .btn { flex: 1; }
+  .btn { min-height: 32px; }
+  .lv td { padding: 4px 6px; }
+}
+@media (max-width: 760px) and (max-height: 560px) {
+  body { height: auto; } .win { height: auto; } .a-market, .stock { min-height: 260px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="win raised" id="app">
+  <div class="titlebar">
+    <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="3" width="14" height="10" fill="#008000" stroke="#003000"/><circle cx="8" cy="8" r="3" fill="#c0e0c0" stroke="#003000"/><rect x="3" y="5" width="1" height="6" fill="#c0e0c0"/><rect x="12" y="5" width="1" height="6" fill="#c0e0c0"/></svg>
+    <span class="t" id="winTitle">Drug Lord</span>
+    <span class="tb-btn raised" aria-hidden="true">_</span><span class="tb-btn raised" aria-hidden="true">□</span><span class="tb-btn raised" aria-hidden="true" style="margin-left:2px">✕</span>
+  </div>
+  <div class="body main">
+    <div class="group a-info"><span class="legend">Information</span><div class="log sunken" id="log" aria-live="polite"></div></div>
+
+    <div class="tabs" id="tabs" role="tablist">
+      <button class="tab" role="tab" id="tMarket" aria-selected="true">Market</button>
+      <button class="tab" role="tab" id="tStock" aria-selected="false">Stash</button>
+    </div>
+    <div class="group a-market"><span class="legend">The Market</span><div class="lv sunken" id="market"></div></div>
+
+    <div class="a-mid">
+      <div class="play">
+      <div class="group"><span class="legend">Action</span><div class="stack">
+        <button class="btn" id="bBuy"><u>B</u>uy &gt;&gt;</button>
+        <button class="btn" id="bSell">&lt;&lt; <u>S</u>ell</button>
+        <button class="btn" id="bDump"><u>D</u>ump...</button>
+        <button class="btn" id="bPlaces">Places...</button>
+        <button class="btn" id="bInfo">Info...</button>
+      </div></div>
+      <div class="group"><span class="legend">Tomorrow</span><div class="stack">
+        <button class="btn" id="bStay">Stay Here</button>
+        <button class="btn" id="bFly">Fly Away...</button>
+        <button class="btn" id="bGame">Game...</button>
+      </div></div>
+      </div>
+      <div class="group gamegrp"><span class="legend">Game</span><div class="stack">
+        <label class="chk" for="snd"><input type="checkbox" id="snd"> <span>Sou<u>n</u>d</span></label>
+        <button class="btn" id="bAbout"><u>A</u>bout...</button>
+        <button class="btn" id="bDocs">D<u>o</u>cs...</button>
+        <button class="btn" id="bScores">H<u>i</u>gh Scores...</button>
+        <button class="btn" id="bNew"><u>N</u>ew Game</button>
+      </div></div>
+    </div>
+
+    <div class="a-right">
+      <div class="group stock"><span class="legend" id="contLbl">Your stash</span><div class="lv sunken" id="stock"></div></div>
+      <div class="group status-g"><span class="legend">Status</span><div class="status">
+        <div class="cell sunken c-loc"><b>Location:</b><span id="sLoc"></span></div>
+        <div class="cell sunken c-hp"><b>Health:</b><div class="bar sunken" id="sHealth"><i></i></div></div>
+        <div class="srow"><div class="cell sunken c-day"><b>Day:</b><span id="sDay"></span></div><div class="cell sunken c-rank"><b>Rank:</b><span id="sRank"></span></div></div>
+        <div class="money"><div class="stack">
+          <div class="cell sunken c-cash"><b>Cash:</b><span id="sCash"></span></div>
+          <div class="cell sunken c-bank"><b>Bank:</b><span id="sBank"></span></div>
+          <div class="cell sunken c-debt"><b>Debt:</b><span id="sDebt"></span></div>
+        </div><div class="hist sunken" id="mini">
+          <div class="htabs" role="tablist"><button class="htab" id="hChart" role="tab" aria-selected="true">Chart</button><button class="htab" id="hWorld" role="tab" aria-selected="false">Cities</button><span class="lbl" id="miniLbl"></span></div>
+          <canvas id="miniC" tabindex="0" role="button" title="Shows the price history of the drug you select. Click to switch to cash, health or debt."></canvas>
+          <div class="wlist" id="miniW" hidden></div>
+        </div></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Drug Lord engine — rules reconstructed from the Drug Lord 2.2 binary. */
+const DL = (() => {
+  const DRUGS = [["Cocaine",5100],["Crack",7000],["Ecstacy",3000],["Hashish",1600],["Heroin",7000],["Ice",3000],["Kat",800],["LSD",1000],["MDA",1000],["Morphine",2000],["Mushrooms",400],["Opium",1500],["PCP",800],["Peyote",1000],["Pot",800],["Special K",1500],["Speed",800]].map(([name,base])=>({name,base}));
+  const CITIES = [["Austin","USA",1861,100],["Beijing","China",5307,190],["Boston","USA",2509,120],["Detroit","USA",1963,80],["London","England",4725,110],["Los Angeles","USA",1072,110],["Miami","USA",2802,90],["Moscow","Russia",5113,160],["New York","USA",2435,100],["Paris","France",4937,90],["San Francisco","USA",791,80],["St Petersburg","Russia",4761,150],["Sydney","Australia",7757,110],["Toronto","Canada",2091,100],["Vancouver","Canada",0,100]].map(([name,country,x,mult])=>({name,country,x,mult}));
+  const RANKS = [
+    {name:"wannabe",cont:"pants pocket",cap:10,next:5000,exp:10,credit:1000},
+    {name:"small-time operator",cont:"coat",cap:25,next:40000,exp:25,credit:8000},
+    {name:"dealer",cont:"black trans am",cap:100,next:300000,exp:100,credit:60000},
+    {name:"big-time dealer",cont:"converted milk truck",cap:600,next:2500000,exp:500,credit:500000},
+    {name:"distributor",cont:"warehouse",cap:3500,next:15000000,exp:2500,credit:3000000},
+    {name:"drug lord",cont:"island paradise",cap:20000,next:Infinity,exp:10000,credit:25000000}];
+  const SHARKS = [["Odd Lenny",5,60,1],["One-eyed Wilbur",4,50,3],["Laughing Max",3,40,4],["Strange ear Leonard",2,30,5],["Buddles",1,15,6]].map(([name,mult,rate,days])=>({name,mult,rate,days}));
+  const I = (name,plural,ammo,ammoPl,acc,dmg,armor,weight,maxAmmo,price,ammoPrice,maxCarry)=>({name,plural,ammo,ammoPl,acc,dmg,armor,weight,maxAmmo,price,ammoPrice,maxCarry});
+  const ITEMS = [
+    I("knife","knives",null,null,35,1,0,5,0,100,0,1),
+    I("pistol","pistols","pistol bullet","pistol bullets",45,1,0,4,100,500,5,1),
+    I("shot gun","shot guns","shot gun shell","shot gun shells",55,2,0,3,100,2500,5,1),
+    I("machine gun","machine guns","machine gun bullet","machine gun bullets",85,1,0,2,250,4000,5,1),
+    I("flame thrower","flame throwers","gas canister","gas canisters",75,8,0,1,10,7500,200,1),
+    I(null,null,"dynamite","sticks of dynamite",90,10,0,1,10,0,250,0),
+    I(null,null,"hand grenade","hand grenades",95,18,0,1,10,0,500,0),
+    I("rocket launcher","rocket launchers","rocket","rockets",80,35,0,1,5,10000,500,1),
+    I("area disrupter","area disrupters","energy globe","energy globes",95,120,0,1,10,500000,25000,1),
+    I("heavy leather coat","heavy leather coats",null,null,0,0,3,1,0,1000,0,1),
+    I("bullet proof vest","bullet proof vests",null,null,0,0,15,1,0,10000,0,1),
+    I("can of no-scent","cans of no-scent",null,null,0,0,0,3,0,1000,0,10)];
+  const NOSCENT = 11;
+  const E = (name,w,arrest,bribe,flee,dmg,count,hit,surr,money)=>({name,w,arrest,bribe,flee,dmg,count,hit,surr,money});
+  const ENEMIES = [
+    E("the drug force",15,1,2,2,20,3,25,75,50), E("the police",15,1,5,5,10,4,20,75,25),
+    E("a youth gang",15,0,20,25,7,3,20,20,10), E("some street toughs",15,0,20,25,7,2,40,20,20),
+    E("ATF",3,1,1,5,15,3,30,75,35), E("a group of concerned citizens",7,1,10,40,5,5,10,35,5),
+    E("a group of wild dogs",5,1,0,60,5,5,15,0,0), E("a pack of sewer rats",3,1,0,80,5,10,5,0,0),
+    E("the swat team",2,1,1,2,25,4,25,75,45), E("airport security",0,1,1,2,25,20,25,75,35)];
+  const AIRPORT = 9;
+  const SHIPPERS = [["Quicker Shipper",10,50],["Courier Stan",20,75],["Sharp Ship",50,90],["International Couriers",100,99]].map(([name,rate,rel])=>({name,rate,rel}));
+  const SPEEDS = [{name:"Three-day",days:3,f:1},{name:"Two-day",days:2,f:2},{name:"Overnight",days:1,f:4}];
+  const HIGH_MSG = ["Prices are higher than the people who use your goods!","Prices go through the roof!","Prices are outrageous!","Prices are insanely high!","Prices are astronomical!"];
+  const HIGH_WHY = ["The pilot of a %s shipment fell asleep and crashed. %s","The smuggler of some %s was killed by a rival dealer. %s","Cops burst into a %s warehouse, seizing everything. %s","Racoons broke into a crate of %s, eating some and dying on the rest. %s","Gang warfare is keeping %s off the streets. %s"];
+  const LOW_MSG = ["Prices are rock bottom!","Prices drop like lead balloons!","Prices plummet!","Prices nose dive!","Prices are lower than the Marianas Trench!"];
+  const LOW_WHY = ["Crates of %s were discovered floating in the ocean. %s","A new %s dealer has arrived in town. %s","A new source of %s is found. %s","A police warehouse is broken into and %s is stolen. %s","A boatload of %s arrives. %s"];
+  const LOST_MSG = ["%s lost your shipment from %s!","An employee of %s has stolen your shipment from %s!","%s was raided and your shipment from %s was confiscated!","The pilot from %s went down over the ocean, losing your shipment from %s"];
+
+  /* Difficulty. Level 7 = the original game's exact rules.
+     rumors: [% chance of a local rumor, % chance of a rumor about another city, extra rumors per day]
+     truth: % of rumors that come true (the rest: 2/3 nothing happens, 1/3 the opposite happens)
+     world: World drug prices + History available; arrows: price arrows + normal price range shown
+     count/hit/dmg: enemy numbers, accuracy, damage multipliers; run: escape chance multiplier
+     deal: points added to surrender, bribe and enemy-flee chances; good/bad: weight of lucky / unlucky events */
+  const L = (name,tag,rumors,truth,world,arrows,count,hit,dmg,run,deal,good,bad)=>({name,tag,rumors,truth,world,arrows,count,hit,dmg,run,deal,good,bad});
+  const LEVELS = [
+    L("Choirboy","Lots of tips, all of them true. Weak enemies, good luck.",[100,100,2],100,true,true,0.5,0.5,0.5,3,30,3,0.3),
+    L("Tourist","Plenty of reliable tips. Easy fights.",[100,100,1],95,true,true,0.55,0.6,0.6,2.5,25,2.5,0.4),
+    L("Rookie","Two tips a day, almost always right.",[100,100,0],90,true,true,0.65,0.7,0.7,2,20,2,0.5),
+    L("Hustler","Frequent, mostly reliable tips.",[80,80,0],85,true,true,0.75,0.8,0.8,1.6,15,1.6,0.65),
+    L("Street Smart","Regular tips. Fights a bit softer than the original.",[60,60,0],80,true,true,0.85,0.9,0.9,1.3,10,1.3,0.8),
+    L("Pro","Close to the original, with a little more luck.",[45,45,0],75,true,true,0.92,0.95,0.95,1.15,5,1.15,0.9),
+    L("Classic","The original Drug Lord 2.2 rules, untouched.",[100/3,100/3,0],70,true,true,1,1,1,1,0,1,1),
+    L("Veteran","Fewer, shakier rumors. No price history.",[25,25,0],60,false,true,1.15,1.1,1.1,0.85,-5,0.85,1.15),
+    L("Kingpin","Rare rumors you can't trust. Tougher enemies.",[15,15,0],50,false,true,1.3,1.2,1.2,0.7,-10,0.7,1.3),
+    L("Blind","No rumors, no price trends, no history. Brutal fights.",[0,0,0],0,false,false,1.5,1.3,1.3,0.6,-15,0.6,1.5)];
+
+  const rnd = n => n > 0 ? Math.floor(Math.random()*n) : n < 0 ? -Math.floor(Math.random()*-n) : 0;
+  const idiv = (a,b) => Math.trunc(a/b);
+  const fmt = n => (n < 0 ? "-$" : "$") + Math.abs(Math.trunc(n)).toLocaleString("en-US");
+  const num = n => Math.trunc(n).toLocaleString("en-US");
+  const sp = (s,...a) => { let i=0; return s.replace(/%s|%d/g,()=>String(a[i++])); };
+  const cap1 = s => s.replace(/\b\w/g,c=>c.toUpperCase());
+  const units = (n,d) => n===1 ? `a unit of ${d}` : `${n} units of ${d}`;
+  const normal = (city,drug) => idiv(DRUGS[drug].base*CITIES[city].mult,100);
+  const dist = (a,b) => Math.abs(CITIES[a].x - CITIES[b].x);
+
+  function marketStep(market, cap, each) {
+    market.forEach((row,ci)=>row.forEach((m,di)=>{
+      const N = normal(ci,di), h = idiv(N,2), old = m.p, d = m.t - old;
+      m.p = old + rnd(d);
+      if (Math.abs(d) < idiv(m.p,10)) m.t = rnd(N) + h;
+      m.q = Math.max(0, idiv(cap - idiv((m.p-h)*cap, N) + m.q, 2));
+      if (m.e === 0 && rnd(50) === 0) m.e = rnd(2) ? -1 : 1;
+      if (m.e === 1) { m.p = (rnd(h)+N)*(rnd(5)+5); m.q = idiv(m.q, rnd(5)+2); }
+      else if (m.e === -1) { m.p = idiv(N - rnd(h), rnd(5)+5); m.q = m.q*(rnd(5)+2); }
+      each?.(ci, di, m, old);
+      m.e = 0; m.r = 0;
+    }));
+  }
+
+  function newState(level) {
+    const s = {v:2, level: level || 7, day:0, maxDays:30, city:0, lastCity:-1, cash:2000, bank:0, health:100, rank:0, rankCount:0,
+      rankBonus:[true,false,false,false,false,false], over:false, dead:false, quit:false, score:null,
+      market:[], listed:DRUGS.map(()=>false), arrow:DRUGS.map(()=>0),
+      inv:DRUGS.map(()=>({q:0,a:0})), vault:CITIES.map(()=>DRUGS.map(()=>({q:0,a:0}))), vaultUsed:false,
+      sharks:SHARKS.map(()=>({debt:0,pen:0,el:0})), items:ITEMS.map(()=>({own:0,ammo:0})),
+      ships:[], shipSeq:1, log:[], hist:{cash:[],health:[],debt:[],price:CITIES.map(()=>DRUGS.map(()=>[]))}};
+    s.sharks[4].debt = 1000;
+    const cap = RANKS[0].cap;
+    s.market = CITIES.map((c,ci)=>DRUGS.map((d,di)=>{
+      const N = normal(ci,di), p = rnd(N)+idiv(N,2);
+      return {q:Math.max(0, cap - idiv((p-idiv(N,2))*cap,N)), p, t:p, e:0, r:0};
+    }));
+    return s;
+  }
+
+  class Game {
+    constructor(state, ui, level) { this.s = state || newState(level); if (!this.s.level) this.s.level = 7; this.ui = ui; }
+    get lv() { return LEVELS[this.s.level - 1]; }
+    say(text,color) { this.s.log.push({text,color:color||""}); }
+    carried() { return this.s.inv.reduce((t,x)=>t+x.q,0); }
+    cap() { return RANKS[this.s.rank].cap; }
+    room() { return Math.max(0, this.cap()-this.carried()); }
+    debt() { return this.s.sharks.reduce((t,x)=>t+x.debt,0); }
+    worth() { return this.s.cash + this.s.bank - this.debt(); }
+    blocked() { return this.carried() > this.cap(); }
+    price(d) { return this.s.market[this.s.city][d].p; }
+    addInv(d,q,paid) { const x=this.s.inv[d]; if (q<=0) return; x.a = x.q+q ? idiv(x.q*x.a + q*paid, x.q+q) : 0; x.q += q; }
+
+    async start() {
+      // Ten quiet days of market life before day 1, so every price chart already has a past.
+      // The past is simulated on a throwaway copy of the market and played backwards, so it ends on
+      // today's opening price. The real market is left exactly as the original game sets it up.
+      const s = this.s, PRE = 10, cap = this.cap();
+      const copy = s.market.map(row => row.map(m => ({...m})));
+      const path = CITIES.map(() => DRUGS.map(() => []));
+      for (let k = 0; k < PRE - 1; k++) { marketStep(copy, cap); copy.forEach((row,ci)=>row.forEach((m,di)=>path[ci][di].push(m.p))); }
+      s.market.forEach((row,ci)=>row.forEach((m,di)=>s.hist.price[ci][di].push(...path[ci][di].reverse(), m.p)));
+      s.hist.pre = PRE; s.log = [];
+      await this.nextDay();
+    }
+
+    /* ---------- the day ---------- */
+    async nextDay() {
+      const s = this.s;
+      if (s.over) return;
+      s.day++; s.vaultUsed = false; s.log = [];
+      if (s.lastCity !== s.city) { this.say(sp("Welcome to %s!", CITIES[s.city].name), "sys"); s.lastCity = s.city; }
+      if (s.day === s.maxDays) this.say("This is the last day! Better sell all you can!", "sys");
+      if (s.day > s.maxDays) return this.endGame();
+      if (s.health < 100) s.health = Math.min(100, s.health + 1 + rnd(2));
+      s.cash -= RANKS[s.rank].exp;
+      if (s.cash <= 0) { this.say("You are out of money! You manage to scrape something together for food and stuff.", "bad"); }
+      if (s.day === 1) this.intro();
+      else { await this.randomEvent(); if (s.health < 0) return this.endGame(); }
+      this.updateMarket();
+      await this.updateLoans(); if (s.health < 0) return this.endGame();
+      this.checkRank();
+      this.updateShipments();
+      this.rumors();
+      this.record();
+      this.ui?.save?.();
+    }
+    intro() {
+      this.say("After one failed job after another, you decide to try a different life: drug dealer! You scrape together your last $1,000, but it really isn't enough to get started. The good news: Buddles spots you another $1,000. The bad news: Buddles is a loan shark, and he will want his money back soon. Time to get to work!");
+    }
+    record() {
+      const s = this.s, h = s.hist;
+      h.cash.push(s.cash); h.health.push(s.health); h.debt.push(this.debt());
+      s.market.forEach((row,ci)=>row.forEach((m,di)=>h.price[ci][di].push(m.p)));
+    }
+
+    updateMarket() {
+      const s = this.s;
+      marketStep(s.market, this.cap(), (ci, di, m, old) => {
+        if (ci === s.city) {
+          const nm = DRUGS[di].name;
+          if (m.r) this.say(sp("The %s rumor was %s!", nm, m.r === 1 ? "true" : "false"), m.r === 1 ? "good" : "bad");
+          if (m.e === 1) this.say(sp(HIGH_WHY[rnd(5)], nm, HIGH_MSG[rnd(5)]));
+          else if (m.e === -1) this.say(sp(LOW_WHY[rnd(5)], nm, LOW_MSG[rnd(5)]));
+          s.listed[di] = m.e !== 0 || rnd(3) !== 0;
+          s.arrow[di] = Math.sign(m.p - old);
+        }
+      });
+    }
+
+    rumors() {
+      const s = this.s, lv = this.lv, chance = p => Math.random()*100 < p;
+      const one = (city, msgAbundant, msgScarce) => {
+        const di = rnd(DRUGS.length), m = s.market[city][di];
+        m.r = -1;
+        const r = Math.random()*100, miss = 100 - lv.truth;
+        if (r < lv.truth) { m.e = 1; m.r = 1; } else if (r - lv.truth < miss*2/3) m.e = 0; else m.e = -1;
+        const args = [DRUGS[di].name, CITIES[city].name];
+        if (rnd(2) === 0) this.say(sp(msgScarce, ...args), "good");
+        else { this.say(sp(msgAbundant, ...args), "good"); m.e = -m.e; }
+      };
+      const local = () => one(s.city, "You hear a rumor that %s will be abundant tomorrow.", "You hear a rumor that %s will be scarce tomorrow.");
+      const away = c => one(c, "You hear a rumor that %s will be abundant in %s tomorrow.", "You hear a rumor that %s will be scarce in %s tomorrow.");
+      const other = () => { let c = rnd(CITIES.length-1); if (c >= s.city) c++; away(c); };
+      let heard = 0;
+      if (chance(lv.rumors[0])) { local(); heard++; }
+      if (chance(lv.rumors[1])) { other(); heard++; }
+      for (let k = 0; k < lv.rumors[2]; k++) { (rnd(2) ? local : other)(); heard++; }
+      // Levels easier than the original always start with a tip on day 1.
+      if (s.day === 1 && s.level < 7 && !heard) local();
+    }
+
+    checkRank() {
+      const s = this.s, total = s.cash + s.bank;
+      let target = 0; while (target < 5 && total >= RANKS[target].next) target++;
+      if (target === s.rank) { s.rankCount = 0; return; }
+      if (++s.rankCount < 3) return;
+      s.rankCount = 0;
+      if (target > s.rank) {
+        s.rank++;
+        let extra = "";
+        if (!s.rankBonus[s.rank]) { s.rankBonus[s.rank] = true; s.maxDays += 5; extra = " You also get 5 more days of gameplay!"; }
+        this.say(sp("You have been PROMOTED to %s.%s", cap1(RANKS[s.rank].name), extra), "good");
+        this.say(sp("To keep this rank, you must never let your cash dip below %s for more than 3 days in a row.", fmt(RANKS[target-1].next)), "good");
+      } else {
+        s.rank--;
+        this.say(sp("You have been DEMOTED to %s.", cap1(RANKS[s.rank].name)), "bad");
+        if (this.carried() > RANKS[target].cap) this.say(sp("You MUST sell, dump, vault or ship some goods to bring the total to %d units.", this.cap()), "bad");
+      }
+    }
+
+    /* ---------- loans ---------- */
+    async updateLoans() {
+      const s = this.s;
+      for (let i = 0; i < SHARKS.length; i++) {
+        const L = s.sharks[i], S = SHARKS[i];
+        if (!L.debt) continue;
+        L.debt += idiv(L.debt*S.rate, 100);
+        L.pen = idiv(S.rate*L.debt, 200);
+        L.el++;
+        if (L.el === S.days) this.say(sp("%s is going to be stopping by tomorrow!", S.name), "bad");
+        else if (L.el > S.days) {
+          const late = L.el - S.days;
+          let text = sp("%s and his boys have stopped by!", S.name), dead = false;
+          if (late >= 4) {
+            s.health -= rnd(25)*(late-3);
+            if (s.health < 1) { dead = true; text += " Oh oh, looks like they've killed you!"; }
+            else text += " They teach you a lesson!";
+          }
+          const canPay = !dead && s.cash >= L.debt;
+          if (!dead) text += canPay ? " Good thing you have enough cash on hand." : " Looks like you don't have enough money to repay him...";
+          const choice = this.ui ? await this.ui.loanVisit({shark:i, name:S.name, text, dead, canPay, debt:L.debt}) : (canPay ? "pay" : "dont");
+          if (choice === "pay" && canPay) { this.say(sp("You give %s the %s.", S.name, fmt(L.debt)), "good"); s.cash -= L.debt; L.debt = 0; L.pen = 0; L.el = 0; }
+        }
+      }
+    }
+    borrowLimit(i) {
+      const s = this.s; let w = s.cash + s.bank;
+      s.inv.forEach((x,d)=>{ w += idiv(this.price(d),2)*x.q; });
+      return SHARKS[i].mult * Math.min(w, RANKS[s.rank].credit);
+    }
+    borrow(i, amt) {
+      const L = this.s.sharks[i];
+      if (L.debt || amt <= 0 || amt > this.borrowLimit(i)) return false;
+      L.debt = amt; L.el = 0; L.pen = 0; this.s.cash += amt; return true;
+    }
+    repayCost(i) { const L = this.s.sharks[i]; return L.el < SHARKS[i].days ? L.debt + L.pen : L.debt; }
+    repay(i) {
+      const L = this.s.sharks[i], c = this.repayCost(i);
+      if (!L.debt || this.s.cash < c) return false;
+      this.s.cash -= c; L.debt = 0; L.pen = 0; L.el = 0; return true;
+    }
+    deposit(a) { a = Math.min(a, this.s.cash); if (a<=0) return false; this.s.cash -= a; this.s.bank += a; return true; }
+    withdraw(a) { a = Math.min(a, this.s.bank); if (a<=0) return false; this.s.bank -= a; this.s.cash += a; return true; }
+
+    /* ---------- market actions ---------- */
+    maxBuy(d) {
+      const s = this.s, m = s.market[s.city][d];
+      if (!s.listed[d] || m.p <= 0) return 0;
+      return Math.max(0, Math.min(Math.floor(s.cash/m.p), this.room(), m.q));
+    }
+    buy(d,n) {
+      const s = this.s, m = s.market[s.city][d];
+      if (n < 1 || n > this.maxBuy(d)) return false;
+      s.cash -= n*m.p; m.q -= n; this.addInv(d,n,m.p); return true;
+    }
+    canSell(d) { return this.s.listed[d] && this.s.inv[d].q > 0; }
+    sell(d,n) {
+      const s = this.s, m = s.market[s.city][d], x = s.inv[d];
+      if (!s.listed[d] || n < 1 || n > x.q) return false;
+      s.cash += n*m.p; m.q += n; x.q -= n; if (!x.q) x.a = 0; return true;
+    }
+    dump(d,n) { const x = this.s.inv[d]; if (n<1 || n>x.q) return false; x.q -= n; if (!x.q) x.a = 0; return true; }
+
+    /* ---------- shop & hospital ---------- */
+    healCost(target) { const a = 100-this.s.health, b = 100-target; return a*a*a - b*b*b; }
+    heal(target) { const c = this.healCost(target); if (c <= 0 || c > this.s.cash) return false; this.s.cash -= c; this.s.health = target; return true; }
+    // Same limits as the original shop, quirks included: armor and No-Scent are never "full",
+    // and the amount offered is what you can afford whenever that fits under the cap.
+    shopCanItem(i) { const it = ITEMS[i], o = this.s.items[i]; return !!(it.name && it.price) && (o.own < it.maxCarry || it.acc === 0) && this.s.cash >= it.price; }
+    shopCanAmmo(i) { const it = ITEMS[i], o = this.s.items[i]; return !!it.ammo && o.ammo < it.maxAmmo && this.s.cash >= it.ammoPrice; }
+    shopMaxItem(i) {
+      const it = ITEMS[i], o = this.s.items[i]; if (!this.shopCanItem(i)) return 0;
+      const n = Math.floor(this.s.cash/it.price); return Math.max(0, n <= it.maxCarry ? n : it.maxCarry - o.own);
+    }
+    shopMaxAmmo(i) {
+      const it = ITEMS[i], o = this.s.items[i]; if (!this.shopCanAmmo(i)) return 0;
+      const n = Math.floor(this.s.cash/it.ammoPrice); return Math.max(0, n <= it.maxAmmo ? n : it.maxAmmo - o.ammo);
+    }
+    buyItem(i,n,ammo) {
+      const it = ITEMS[i], o = this.s.items[i];
+      if (ammo) { if (n<1 || n>this.shopMaxAmmo(i)) return false; this.s.cash -= n*it.ammoPrice; o.ammo += n; }
+      else { if (n<1 || n>this.shopMaxItem(i)) return false; this.s.cash -= n*it.price; o.own += n; }
+      return true;
+    }
+    sellItem(i,n,ammo) {
+      const it = ITEMS[i], o = this.s.items[i];
+      if (ammo) { if (n<1 || n>o.ammo) return false; this.s.cash += n*it.ammoPrice; o.ammo -= n; }
+      else { if (n<1 || n>o.own) return false; this.s.cash += n*it.price; o.own -= n; }
+      return true;
+    }
+
+    /* ---------- vault ---------- */
+    toVault(d,n) { const s=this.s, x=s.inv[d], v=s.vault[s.city][d]; if (n<1||n>x.q) return false; v.a = idiv(v.q*v.a+n*x.a, v.q+n); v.q+=n; x.q-=n; if(!x.q)x.a=0; return true; }
+    fromVault(d,n) { const s=this.s, v=s.vault[s.city][d]; if (n<1||n>v.q||n>this.room()) return false; this.addInv(d,n,v.a); v.q-=n; if(!v.q)v.a=0; return true; }
+
+    /* ---------- shipping ---------- */
+    shipCost(shipper, speed, unitsN, dest) { return idiv(SHIPPERS[shipper].rate*SPEEDS[speed].f*unitsN*dist(this.s.city,dest), 1000); }
+    ship(list, dest, speed, shipper) {
+      const s = this.s, n = list.reduce((t,x)=>t+x.q,0), cost = this.shipCost(shipper,speed,n,dest);
+      if (!n || dest === s.city || cost <= 0 || cost > s.cash) return false;
+      for (const x of list) if (x.q > s.inv[x.d].q) return false;
+      s.cash -= cost;
+      const drugs = list.filter(x=>x.q>0).map(x=>{ const a = s.inv[x.d].a; s.inv[x.d].q -= x.q; if (!s.inv[x.d].q) s.inv[x.d].a = 0; return {d:x.d,q:x.q,a}; });
+      s.ships.push({id:s.shipSeq++, from:s.city, to:dest, shipper, cost, arrive:s.day+SPEEDS[speed].days, status:0, drugs});
+      return true;
+    }
+    updateShipments() {
+      const s = this.s;
+      s.ships = s.ships.filter(sh => {
+        const from = CITIES[sh.from].name;
+        if (sh.status === 0 || sh.status === 1) {
+          if (rnd(5) === 0) { sh.arrive++; this.say(sp(sh.status ? "Your shipment from %s has been delayed AGAIN!" : "Your shipment from %s has been delayed!", from), "bad"); sh.status = 1; }
+          else if (s.day >= sh.arrive) sh.status = 2;
+        }
+        if (sh.status !== 2) return true;
+        if (s.city === sh.to) {
+          if (rnd(100)+1 > SHIPPERS[sh.shipper].rel) { this.say(sp(LOST_MSG[rnd(4)], SHIPPERS[sh.shipper].name, from), "bad"); return false; }
+          this.say(sp("Your shipment from %s has arrived!", from), "good");
+          sh.drugs.forEach(x=>this.addInv(x.d,x.q,x.a));
+          if (this.blocked()) this.say(sp("You MUST sell, dump, vault or ship some goods to bring the total to %d units.", this.cap()), "bad");
+          return false;
+        }
+        // The original announces this every day but never actually removes the shipment.
+        if (s.day - sh.arrive > 3) this.say(sp("DUDE! You waited too long! Your shipment from %s has been thrown out!", from), "bad");
+        return true;
+      });
+    }
+
+    /* ---------- travel ---------- */
+    flightCost(c) { return dist(this.s.city, c); }
+    scentNeeded() { return Math.ceil(this.carried()/100); }
+    async fly(c, cans) {
+      const s = this.s, cost = this.flightCost(c), n = this.carried();
+      if (c === s.city || cost > s.cash || this.blocked() || s.over) return false;
+      cans = Math.max(0, Math.min(cans|0, s.items[NOSCENT].own));
+      s.items[NOSCENT].own -= cans;
+      s.cash -= cost;
+      s.log = [];
+      const safe = n === 0 || rnd(100) === 0 || (rnd(100) !== 0 && 1 + rnd(n) <= cans*100);
+      let res = 6;
+      if (!safe) {
+        this.say("The drug sniffing dogs smell something!", "bad");
+        res = await this.encounter(AIRPORT);
+      }
+      if (res === 0) return this.endGame();
+      if (res === 1 || res === 2) { this.say(sp("That didn't work out so well. You are still in %s and it is still day %d.", CITIES[s.city].name, s.day), "bad"); this.ui?.save?.(); return true; }
+      s.city = c;
+      await this.nextDay();
+      return true;
+    }
+
+    /* ---------- random events ---------- */
+    async randomEvent() {
+      if (rnd(2)) return;
+      // Fights keep the original share of events at every level; luck only shifts the other events.
+      const fights = EVENTS.filter(e=>e.kind==="fight"), rest = EVENTS.filter(e=>e.kind!=="fight");
+      const fw = fights.reduce((t,e)=>t+e.w,0), all = EVENTS.reduce((t,e)=>t+e.w,0);
+      if (rnd(all) < fw) { const e = fights[rnd(fights.length)]; return e.f.call(this, e); }
+      const w = e => e.w * (e.kind === "good" ? this.lv.good : this.lv.bad);
+      let r = Math.random() * rest.reduce((t,e)=>t+w(e),0);
+      for (const e of rest) { if (r < w(e)) return e.f.call(this, e); r -= w(e); }
+    }
+    giftDrugs(e) {
+      const s = this.s, room = this.room(); if (!room) return;
+      const d = rnd(DRUGS.length); let n = rnd(10) === 0 ? rnd(10)+5 : rnd(3)+1; n = Math.min(n, room);
+      this.addInv(d, n, 0);
+      this.say(sp(e.msg, units(n, DRUGS[d].name)), "good");
+    }
+    loseSomeDrugs(e) {
+      const owned = this.s.inv.map((x,d)=>x.q?d:-1).filter(d=>d>=0); if (!owned.length) return;
+      const d = owned[rnd(owned.length)], x = this.s.inv[d], n = rnd(x.q)+1;
+      x.q -= n; if (!x.q) x.a = 0;
+      this.say(sp(e.msg, n === 1 ? `a unit of ${DRUGS[d].name} is` : `${n} units of ${DRUGS[d].name} are`), "bad");
+    }
+    findMoney(e) { const a = rnd(10) === 0 ? rnd(5000)+1000 : rnd(500)+100; this.s.cash += a; this.say(sp(e.msg, fmt(a).slice(1)), "good"); }
+    loseMoney(e, hurt) {
+      const s = this.s; if (s.cash <= 0) return;
+      let a = rnd(10) === 0 ? rnd(5000)+1000 : rnd(500)+100; a = Math.min(a, s.cash);
+      s.cash -= a;
+      if (hurt) s.health -= 5 + rnd(10);
+      this.say(sp(e.msg, hurt && s.cash === 0 ? "all your money" : (e.dollar ? fmt(a).slice(1) : fmt(a))), "bad");
+    }
+    addict(e) {
+      const owned = this.s.inv.map((x,d)=>x.q?d:-1).filter(d=>d>=0); if (!owned.length) return;
+      const d = owned[rnd(owned.length)]; this.s.inv[d] = {q:0,a:0};
+      this.say(sp(e.msg, DRUGS[d].name, DRUGS[d].name), "bad");
+    }
+    findGear(e) {
+      const s = this.s, pickAmmo = list => {
+        const tot = list.reduce((t,i)=>t+ITEMS[i].weight,0); let r = rnd(tot);
+        for (const i of list) { if (r < ITEMS[i].weight) return i; r -= ITEMS[i].weight; }
+      };
+      const giveAmmo = i => {
+        const it = ITEMS[i], o = s.items[i]; if (o.ammo >= it.maxAmmo) return;
+        const n = rnd(it.maxAmmo - o.ammo) + 1; o.ammo += n;
+        this.say(sp(e.msg, n === 1 ? `a ${it.ammo}` : `${n} ${it.ammoPl}`), "good");
+      };
+      if (rnd(5) !== 0) return giveAmmo(pickAmmo(ITEMS.map((it,i)=>it.ammo && it.name ? i : -1).filter(i=>i>=0)));
+      const pool = []; ITEMS.forEach((it,i)=>{ if (it.name) pool.push([i,false]); else if (it.ammo) pool.push([i,true]); });
+      const tot = pool.reduce((t,[i])=>t+ITEMS[i].weight,0); let r = rnd(tot);
+      for (const [i,isAmmo] of pool) {
+        if (r < ITEMS[i].weight) {
+          if (isAmmo) return giveAmmo(i);
+          const it = ITEMS[i], n = it.acc === 0 ? rnd(5)+1 : 1;
+          s.items[i].own += n;
+          return this.say(sp(e.msg, n === 1 ? `a ${it.name}` : `${n} ${it.plural}`), "good");
+        }
+        r -= ITEMS[i].weight;
+      }
+    }
+    breakWeapon(e) {
+      const s = this.s, maxP = Math.max(...ITEMS.map(it=>it.price));
+      const list = ITEMS.map((it,i)=>it.name && it.acc && s.items[i].own ? i : -1).filter(i=>i>=0);
+      const w = i => idiv(maxP, ITEMS[i].price), tot = list.reduce((t,i)=>t+w(i),0); if (!tot) return;
+      let r = rnd(tot);
+      for (const i of list) { if (r < w(i)) { s.items[i].own--; return this.say(sp(e.msg, ITEMS[i].name), "bad"); } r -= w(i); }
+    }
+    async ambush(e) { this.say(e.msg, "bad"); await this.encounter(null); }
+
+    /* ---------- fights ---------- */
+    pickEnemy() {
+      const tot = ENEMIES.reduce((t,x)=>t+x.w,0); let r = rnd(tot);
+      for (let i=0;i<ENEMIES.length;i++) { if (r < ENEMIES[i].w) return i; r -= ENEMIES[i].w; }
+      return 0;
+    }
+    async encounter(ei) {
+      const f = new Fight(this, ei == null ? this.pickEnemy() : ei, ei === AIRPORT);
+      const res = this.ui ? await this.ui.fight(f) : autoFight(f);
+      return res;
+    }
+
+    /* ---------- the end ---------- */
+    endGame() {
+      const s = this.s; if (s.over) return;
+      s.over = true; s.day = Math.min(s.day, s.maxDays);
+      if (s.health < 0) { s.dead = true; this.say("YOU WERE KILLED!", "bad"); }
+      s.score = this.worth();
+      this.say(sp("That's it, the game is over! You have a final score of %s", fmt(s.score)), "sys");
+      this.ui?.gameOver?.();
+      this.ui?.save?.();
+    }
+    quit() { if (!this.s.over) { this.s.log = []; this.s.quit = true; this.endGame(); } }
+  }
+
+  const EVENTS = [
+    {kind:"good", w:5, msg:"A friend stops by and gives you %s!", f:Game.prototype.giftDrugs},
+    {kind:"bad", w:2, msg:"You feel someone brush against you and discover that %s missing!", f:Game.prototype.loseSomeDrugs},
+    {kind:"bad", w:1, msg:"Close inspection reveals that %s fake!", f:Game.prototype.loseSomeDrugs},
+    {kind:"good", w:5, msg:"You stumble across a dead body and find %s!", f:Game.prototype.giftDrugs},
+    {kind:"good", w:3, msg:"You find a woman's purse in a trash can. Inside is $%s!", f:Game.prototype.findMoney},
+    {kind:"good", w:3, msg:"You find a wallet with $%s in it!", f:Game.prototype.findMoney},
+    {kind:"bad", w:1, msg:"Your home is infested with rats! You have to pay an exterminator $%s to get rid of them!", dollar:true, f(e){ return this.loseMoney(e,false); }},
+    {kind:"bad", w:3, msg:"You have been mugged! He takes %s and runs!", f(e){ return this.loseMoney(e,true); }},
+    {kind:"bad", w:3, msg:"You get off the subway and find $%s has been lifted from you!", dollar:true, f(e){ return this.loseMoney(e,false); }},
+    {kind:"bad", w:1, msg:"A %s addict jumps you and demands all your %s! You have no choice but to hand it over.", f:Game.prototype.addict},
+    {kind:"good", w:5, msg:"You trip over a body. You search it and find %s!", f:Game.prototype.findGear},
+    {kind:"bad", w:1, msg:"OH MAN! You are cleaning your %s and it falls apart!", f:Game.prototype.breakWeapon},
+    {kind:"fight", w:10, msg:"Some days just aren't worth it...", f:Game.prototype.ambush},
+    {kind:"fight", w:10, msg:"Did you hear that?", f:Game.prototype.ambush},
+    {kind:"fight", w:10, msg:"In the distance you catch sight of something. You try to run, but it's of no use.", f:Game.prototype.ambush}];
+
+  class Fight {
+    constructor(g, ei, airport) {
+      this.g = g; this.s = g.s; this.ei = ei; this.e = ENEMIES[ei]; this.airport = airport;
+      const lv = g.lv; this.lv = lv;
+      let n = this.e.count; if (this.e.money) n *= this.s.rank + 1;
+      n = Math.max(1, Math.round(n * lv.count));
+      this.total = this.left = Math.max(1, rnd(n) + idiv(n,2));
+      this.perHead = rnd(500) + 500;
+      this.surrenderOk = this.e.surr > 0; this.result = null; this.lines = [];
+      this.say(sp("You have encountered %s! There %s of them!", this.e.name, this.left === 1 ? "is only one" : `are ${this.left}`), "bad");
+    }
+    say(text,color) { this.lines.push({text,color:color||""}); }
+    get canBribe() { return this.e.bribe > 0 && this.result == null; }
+    get canSurrender() { return this.surrenderOk && this.result == null; }
+    weapons() {
+      const s = this.s;
+      return ITEMS.map((it,i)=>{
+        const o = s.items[i]; if (it.armor || !it.acc) return null;
+        if (it.name && o.own && (!it.ammo || o.ammo > 0)) return {i, name:it.name, ammo: it.ammo ? o.ammo : null};
+        if (!it.name && o.ammo > 0) return {i, name:it.ammo, ammo:o.ammo};
+        return null;
+      }).filter(Boolean);
+    }
+    end(code) { this.result = code; if (code === 4 || code === 5) this.loot(); }
+    loot() {
+      const m = this.e.money; if (!m) return;
+      let k = this.total - this.left, cash = 0;
+      while (k-- > 0) cash += rnd(5) === 0 ? idiv(m,2) + rnd(m) : idiv(10*m,2) + rnd(10*m);
+      if (cash > 0) { this.s.cash += cash; this.say(sp("You search the bodies and find %s!", fmt(cash)), "good"); }
+    }
+    attacked() {
+      const s = this.s; if (this.left <= 0) return;
+      let armor = 0;
+      ITEMS.forEach((it,i)=>{ if (it.armor && s.items[i].own) armor += idiv(it.armor,2) + rnd(it.armor); });
+      let dmg = 0;
+      const hit = this.e.hit * this.lv.hit, maxDmg = Math.max(1, Math.round(this.e.dmg * this.lv.dmg));
+      for (let k=0;k<this.left;k++) if (rnd(101)+1 < hit) dmg += rnd(maxDmg);
+      dmg -= armor;
+      if (dmg < 1) return this.say("They attack you but miss!");
+      s.health -= dmg;
+      this.say(sp("You have been hit for %s of damage!", dmg === 1 ? "1 point" : `${dmg} points`), "bad");
+      if (s.health < 1) { this.say("YOU ARE DEAD!", "bad"); this.end(0); }
+    }
+    surrender() {
+      const s = this.s; this.say("You shout out that you surrender.");
+      if (rnd(101)+1 < this.e.surr + this.lv.deal) {
+        const had = this.g.carried();
+        s.inv.forEach(x=>{x.q=0;x.a=0;});
+        if (!this.e.arrest) { this.attacked(); s.cash = 0; this.say("They accept your surrender but take everything! Hope you have money in the bank!", "bad"); }
+        else { this.say("They accept your surrender."); this.say(had ? "They seize all your drugs! They arrest you and after a few hours in jail, you are let go." : "They search you and find you are clean! A brief apology is mumbled.", had ? "bad" : "good"); }
+        return this.end(1);
+      }
+      this.say("Your surrender is not accepted!", "bad"); this.surrenderOk = false; this.attacked();
+    }
+    run() {
+      const s = this.s; this.say("You try to run!");
+      if (Math.random() < Math.min(0.95, this.lv.run / Math.min(this.left+1, 10))) {
+        this.say("You manage to lose them in the streets!", "good");
+        if (this.airport) {
+          if (s.cash > 50) s.cash = 50;
+          s.inv.forEach(x=>{x.q=0;x.a=0;});
+          this.say(sp("BUT, all of your money and drugs have been lost because they were in your luggage. All you have left is %s, which was in your wallet.", fmt(s.cash)), "bad");
+        }
+        return this.end(2);
+      }
+      this.say("You are unable to shake them.", "bad"); this.attacked();
+    }
+    bribe(amount) {
+      const s = this.s;
+      if (amount == null) { this.say("Probably not the best time to be stingy.", "bad"); return this.attacked(); }
+      amount = Math.min(amount|0, s.cash);
+      if (amount >= this.left*this.perHead && rnd(101) <= this.e.bribe + this.lv.deal) { s.cash -= amount; this.say("They accept your bribe!", "good"); return this.end(3); }
+      this.say("They laugh at your attempt!", "bad"); this.attacked();
+    }
+    fight(i) {
+      const it = ITEMS[i], o = this.s.items[i];
+      if (it.ammo) { if (o.ammo <= 0) return; o.ammo--; }
+      this.say(sp("You use your %s.", it.name || it.ammo));
+      if (it.acc <= rnd(101)+1) { this.say("You miss!"); return this.attacked(); }
+      let k = it.dmg === 1 ? 1 : rnd(it.dmg) + idiv(it.dmg,2); k = Math.max(1, Math.min(k, this.left));
+      this.left -= k;
+      if (!this.left) { this.say(sp("You killed the remaining %d! They are all dead!", k), "good"); return this.end(4); }
+      this.say(sp("You killed %d of them! Only %s.", k, this.left === 1 ? "1 remains" : `${this.left} remain`), "good");
+      if (this.left < idiv(this.total,2) && rnd(100) < this.e.flee + this.lv.deal) { this.say("They decide to flee!", "good"); return this.end(5); }
+      this.attacked();
+    }
+  }
+  function autoFight(f) {
+    for (let guard=0; f.result == null && guard<500; guard++) {
+      const w = f.weapons(); w.sort((a,b)=>ITEMS[b.i].dmg-ITEMS[a.i].dmg);
+      if (w.length) f.fight(w[0].i); else if (f.canSurrender) f.surrender(); else f.run();
+    }
+    f.lines.forEach(l=>f.g.say(l.text,l.color));
+    return f.result ?? 2;
+  }
+
+  return {LEVELS,DRUGS,CITIES,RANKS,SHARKS,ITEMS,NOSCENT,ENEMIES,SHIPPERS,SPEEDS,AIRPORT,Game,Fight,newState,fmt,num,sp,cap1,idiv,normal,dist,rnd};
+})();
+if (typeof module !== "undefined") module.exports = DL;
+
+</script>
+<script>
+(() => {
+const {LEVELS,DRUGS,CITIES,RANKS,SHARKS,ITEMS,NOSCENT,ENEMIES,SHIPPERS,SPEEDS,Game,fmt,num,sp,cap1,idiv,normal} = DL;
+const $ = id => document.getElementById(id);
+const h = (tag, attrs={}, ...kids) => { const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})) { if (k === "class") e.className = v; else if (k.startsWith("on")) e.addEventListener(k.slice(2), v); else if (v === true) e.setAttribute(k,""); else if (v !== false && v != null) e.setAttribute(k,v); }
+  for (const k of kids.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : String(k));
+  return e; };
+const store = { get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }, del(k){ try { localStorage.removeItem(k); } catch {} } };
+const SAVE = "druglord.save.v2", SCORES = "druglord.scores.v1";
+
+let game = null, busy = false, sel = {market:-1, stock:-1}, miniIdx = 0, miniDrug = -1, miniManual = false, tab = "market";
+const focusDrug = d => { miniDrug = d; miniManual = false; };
+
+/* ---------- list view ---------- */
+function listView(host, cols, rows, opt={}) {
+  host.replaceChildren();
+  const t = h("table", {}, h("colgroup", {}, cols.map(c => h("col", {style: c.w ? `width:${c.w}` : null}))),
+    h("thead", {}, h("tr", {}, cols.map(c => h("th", {class: c.n ? "n" : null}, c.t)))));
+  const tb = h("tbody");
+  rows.forEach(r => {
+    const tr = h("tr", {class: [r.key === opt.sel ? "sel" : "", r.off ? "off" : ""].join(" ").trim() || null, tabindex: "-1"},
+      r.cells.map((c,i) => h("td", {class: cols[i].n ? "n" : null}, c)));
+    tr.addEventListener("click", () => opt.onSelect?.(r.key));
+    tr.addEventListener("dblclick", () => opt.onActivate?.(r.key));
+    tb.append(tr);
+  });
+  t.append(tb); host.append(t);
+  if (!rows.length && opt.empty) host.append(h("div", {class: "empty"}, opt.empty));
+  return t;
+}
+
+/* ---------- dialogs ---------- */
+function dialog(title, width, build) {
+  return new Promise(resolve => {
+    const veil = h("div", {class: "veil dim"});
+    const box = h("div", {class: "dlg raised", role: "dialog", "aria-modal": "true", "aria-label": title, style: `--w:${width}px`});
+    const body = h("div", {class: "body"});
+    const close = v => { veil.remove(); document.removeEventListener("keydown", onKey, true); resolve(v); };
+    const onKey = e => { if (e.key === "Escape" && box.dataset.esc !== "off") { e.stopPropagation(); close(null); } };
+    box.append(h("div", {class: "titlebar"}, h("span", {class: "t"}, title),
+      h("button", {class: "tb-btn raised", "aria-label": "Close", onclick: () => { if (box.dataset.esc !== "off") close(null); }}, "✕")), body);
+    veil.append(box); document.body.append(veil);
+    document.addEventListener("keydown", onKey, true);
+    build(body, close, box);
+    setTimeout(() => (box.querySelector("[autofocus]") || box.querySelector(".btn:not(:disabled)"))?.focus(), 0);
+  });
+}
+const btn = (label, onclick, opt={}) => h("button", {class: "btn", onclick, disabled: !!opt.disabled, autofocus: !!opt.focus, id: opt.id}, label);
+
+function message(title, text, color) {
+  return dialog(title, 360, (b, close) => {
+    b.append(h("div", {class: "msg big", style: color ? `color:var(--${color})` : null}, text), h("div", {class: "row end"}, btn("OK", () => close(true), {focus: true})));
+  });
+}
+function confirmBox(title, text, yes="Yes", no="No") {
+  return dialog(title, 360, (b, close) => {
+    b.append(h("div", {class: "msg big"}, text), h("div", {class: "row end"}, btn(yes, () => close(true), {focus: true}), btn(no, () => close(false))));
+  });
+}
+function askNumber(title, text, label, start, max, min=1) {
+  return dialog(title, 400, (b, close) => {
+    const inp = h("input", {class: "field sunken", id: "num-" + title.replace(/\W/g,""), inputmode: "numeric", autocomplete: "off", value: String(start), autofocus: true, style: "width:110px", "aria-label": label});
+    const ok = btn("OK", () => close(parse()));
+    const parse = () => { const v = parseInt(String(inp.value).replace(/[^0-9]/g,""), 10); return Number.isFinite(v) ? v : NaN; };
+    const check = () => { const v = parse(); ok.disabled = !(v >= min && v <= max); };
+    inp.addEventListener("input", check);
+    inp.addEventListener("keydown", e => { if (e.key === "Enter" && !ok.disabled) close(parse()); });
+    b.append(h("div", {class: "group"}, h("span", {class: "legend"}, "Message"), h("div", {class: "msg"}, text)),
+      h("div", {class: "row"}, h("label", {for: inp.id}, label), inp),
+      h("div", {class: "row end"}, ok, btn("Cancel", () => close(null))));
+    check(); setTimeout(() => inp.select(), 0);
+  });
+}
+
+/* ---------- popup menus ---------- */
+function popup(anchor, items) {
+  document.querySelector(".menu")?.remove();
+  const m = h("div", {class: "menu raised", role: "menu"});
+  items.forEach(it => m.append(h("button", {role: "menuitem", disabled: !!it.disabled, onclick: () => { m.remove(); off(); it.run(); }}, it.label)));
+  document.body.append(m);
+  const r = anchor.getBoundingClientRect(), mw = m.offsetWidth, mh = m.offsetHeight;
+  let x = r.right + 2, y = r.top;
+  if (x + mw > innerWidth - 8) x = Math.max(8, r.left);
+  if (x === r.left) y = r.bottom + 2;
+  if (y + mh > innerHeight - 8) y = Math.max(8, innerHeight - mh - 8);
+  m.style.left = x + "px"; m.style.top = y + "px";
+  anchor.classList.add("down");
+  const off = () => { anchor.classList.remove("down"); document.removeEventListener("pointerdown", outside, true); document.removeEventListener("keydown", esc, true); };
+  const outside = e => { if (!m.contains(e.target)) { m.remove(); off(); } };
+  const esc = e => { if (e.key === "Escape") { m.remove(); off(); anchor.focus(); } };
+  setTimeout(() => { document.addEventListener("pointerdown", outside, true); document.addEventListener("keydown", esc, true); m.querySelector("button:not(:disabled)")?.focus(); }, 0);
+}
+
+function thugIcon() { const el = h("span", {style: "flex:none;width:40px;height:40px", "aria-hidden": "true"}); el.innerHTML = '<svg viewBox="0 0 32 32" width="40" height="40"><circle cx="16" cy="12" r="8" fill="#ffd8b0" stroke="#000"/><rect x="8" y="20" width="16" height="10" fill="#404040" stroke="#000"/><rect x="11" y="10" width="4" height="2" fill="#000"/><rect x="17" y="10" width="4" height="2" fill="#000"/><path d="M12 16h8" stroke="#000"/></svg>'; return el; }
+
+/* ---------- ui bridge for the engine ---------- */
+const ui = {
+  save() { if (game) store.set(SAVE, game.s); },
+  loanVisit(v) {
+    return dialog(sp("%s visits", v.name), 440, (b, close, box) => {
+      box.dataset.esc = "off";
+      b.append(h("div", {class: "row", style: "align-items:flex-start;flex-wrap:nowrap"},
+        thugIcon(),
+        h("div", {class: "group", style: "flex:1"}, h("span", {class: "legend"}, "Information"), h("div", {class: "msg big", style: v.dead ? "color:var(--bad)" : null}, v.text))),
+        h("div", {class: "row end"},
+          btn(h("span", {}, h("u", {}, "R"), "epay Loan"), () => close("pay"), {disabled: !v.canPay || v.dead, focus: v.canPay}),
+          btn(h("span", {}, h("u", {}, "D"), "on't Pay"), () => close("dont"), {disabled: v.dead}),
+          btn(h("span", {}, h("u", {}, "C"), "lose"), () => close("dead"), {disabled: !v.dead})));
+    });
+  },
+  fight(f) { return fightDialog(f); },
+  gameOver() { setTimeout(maybeHighScore, 50); }
+};
+
+/* ---------- fight ---------- */
+function fightDialog(f) {
+  return dialog(sp("Fighting %s", f.e.name), 520, (b, close, box) => {
+    box.dataset.esc = "off";
+    const log = h("div", {class: "flog sunken", "aria-live": "polite"});
+    const left = h("span", {}), bar = h("div", {class: "bar sunken", style: "height:18px"}, h("i"));
+    const wl = h("div", {class: "lv sunken", style: "height:104px"});
+    let wsel = -1;
+    const bS = btn("Surrender", () => act(() => f.surrender()));
+    const bR = btn("Run", () => act(() => f.run()));
+    const bB = btn("Bribe...", async () => {
+      const amt = await askNumber("Bribe", sp("How much do you want to offer? You have %s to bribe them with.", fmt(game.s.cash)), "Bribe:", Math.min(game.s.cash, f.left*f.perHead), game.s.cash, 0);
+      act(() => f.bribe(amt));
+    });
+    const bF = btn("Fight", () => { if (wsel >= 0) act(() => f.fight(wsel)); });
+    const bC = btn("Close", () => close(f.result));
+    const act = fn => { fn(); paint(); };
+    const paint = () => {
+      log.replaceChildren(...f.lines.map(l => h("p", {class: l.color || null}, l.text))); log.scrollTop = 1e6;
+      left.textContent = f.left;
+      const hp = Math.max(0, game.s.health); bar.firstChild.style.width = hp + "%"; bar.classList.toggle("low", hp < 30);
+      const ws = f.weapons(); if (!ws.some(w => w.i === wsel)) wsel = ws.length ? ws[0].i : -1;
+      listView(wl, [{t: "Weapon"}, {t: "Ammo", n: 1, w: "70px"}], ws.map(w => ({key: w.i, cells: [w.name, w.ammo == null ? "N/A" : num(w.ammo)]})),
+        {sel: wsel, empty: "You have nothing to fight with.", onSelect: k => { wsel = k; paint(); }, onActivate: k => { wsel = k; if (f.result == null) act(() => f.fight(k)); }});
+      const done = f.result != null;
+      bS.disabled = done || !f.canSurrender; bR.disabled = done; bB.disabled = done || !f.canBribe || game.s.cash <= 0; bF.disabled = done || wsel < 0; bC.disabled = !done;
+      if (done) bC.focus();
+    };
+    b.append(
+      h("div", {class: "group"}, h("span", {class: "legend"}, "Information"),
+        h("div", {class: "row", style: "justify-content:space-between;margin-bottom:6px"}, h("span", {}, "Fighting: ", h("b", {}, f.e.name)), h("span", {}, "# Left: ", left)), log),
+      h("div", {class: "group"}, h("span", {class: "legend"}, "Health"), bar),
+      h("div", {class: "row", style: "align-items:stretch;flex-wrap:nowrap"},
+        h("div", {class: "group", style: "flex:none"}, h("span", {class: "legend"}, "Do something!"), h("div", {class: "stack", style: "width:88px"}, bS, bR, bB, bF)),
+        h("div", {class: "group", style: "flex:1;min-width:0"}, h("span", {class: "legend"}, "Weapon"), wl)),
+      h("div", {class: "row end"}, bC));
+    paint();
+  });
+}
+
+/* ---------- main render ---------- */
+function render() {
+  const g = game, s = g?.s;
+  // log
+  const log = $("log");
+  if (!s) log.replaceChildren(h("p", {class: "sys"}, "Drug Lord"), h("p", {}, "Buy low, sell high, stay alive. Click New Game to start."), h("p", {class: "bad"}, "This is only a game. Don't sell drugs, don't buy drugs, and never use them."));
+  else { log.replaceChildren(...s.log.map(l => h("p", {class: l.color || null}, l.text))); log.scrollTop = 0; }
+
+  // market
+  const mrows = s ? DRUGS.map((d,i) => s.listed[i] ? {key: i, cells: [h("span", {}, g.lv.arrows ? h("i", {class: "arw " + (s.arrow[i] > 0 ? "up" : s.arrow[i] < 0 ? "dn" : "eq")}) : null, d.name), num(s.market[s.city][i].q), fmt(s.market[s.city][i].p)]} : null).filter(Boolean) : [];
+  if (s && !s.listed[sel.market]) sel.market = -1;
+  listView($("market"), [{t: "Drug"}, {t: "Qty", n: 1, w: "22%"}, {t: "Price", n: 1, w: "34%"}], mrows,
+    {sel: sel.market, empty: s ? "Nobody is selling today." : "", onSelect: k => { sel.market = k; focusDrug(k); render(); }, onActivate: k => { sel.market = k; focusDrug(k); doBuy(); }});
+
+  // stock
+  const srows = s ? DRUGS.map((d,i) => s.inv[i].q ? {key: i, off: !s.listed[i], cells: [d.name, num(s.inv[i].q), fmt(s.inv[i].a)]} : null).filter(Boolean) : [];
+  if (s && !s.inv[sel.stock]?.q) sel.stock = -1;
+  listView($("stock"), [{t: "Name"}, {t: "Qty", n: 1, w: "24%"}, {t: "Paid", n: 1, w: "34%"}], srows,
+    {sel: sel.stock, empty: s ? "Empty." : "", onSelect: k => { sel.stock = k; focusDrug(k); render(); }, onActivate: k => { sel.stock = k; focusDrug(k); doSell(); }});
+  $("contLbl").textContent = s ? `${cap1(RANKS[s.rank].cont)}: ${num(g.carried())} of ${num(g.cap())}` : "Your stash";
+  $("tMarket").textContent = s ? `Market (${mrows.length})` : "Market";
+  $("tStock").textContent = s ? `${cap1(RANKS[s.rank].cont)} ${num(g.carried())}/${num(g.cap())}` : "Stash";
+  document.querySelector(".main").dataset.tab = tab;
+  $("tMarket").setAttribute("aria-selected", tab === "market"); $("tStock").setAttribute("aria-selected", tab === "stock");
+
+  $("winTitle").textContent = s ? `Drug Lord - Level ${s.level}: ${g.lv.name}` : "Drug Lord";
+  // status
+  $("sLoc").textContent = s ? `${CITIES[s.city].name}, ${CITIES[s.city].country}` : "";
+  const hp = s ? Math.max(0, s.health) : 0; $("sHealth").firstChild.style.width = hp + "%"; $("sHealth").classList.toggle("low", hp < 30);
+  $("sHealth").title = s ? `${hp} / 100` : "";
+  $("sDay").textContent = s ? `${s.day} of ${s.maxDays}` : "";
+  $("sRank").textContent = s ? cap1(RANKS[s.rank].name) : "";
+  $("sCash").textContent = s ? fmt(s.cash) : ""; $("sBank").textContent = s ? fmt(s.bank) : ""; $("sDebt").textContent = s ? fmt(g.debt()) : "";
+  drawMini();
+
+  // buttons
+  const live = s && !s.over && !busy;
+  $("bBuy").disabled = !(live && sel.market >= 0 && g.maxBuy(sel.market) > 0);
+  $("bSell").disabled = !(live && sel.stock >= 0 && g.canSell(sel.stock));
+  $("bDump").disabled = !(live && sel.stock >= 0);
+  $("bPlaces").disabled = !live; $("bInfo").disabled = !s || busy;
+  $("bStay").disabled = !live || g.blocked(); $("bFly").disabled = !live || g.blocked();
+  $("bStay").textContent = s && s.day >= s.maxDays ? "End Game" : "Stay Here";
+  $("bNew").textContent = s && !s.over ? "Quit" : "New Game";
+  $("bNew").disabled = busy;
+}
+
+/* ---------- history drawing ---------- */
+function series(kind, city, drug) {
+  const s = game.s;
+  if (kind === "cash") return {name: "Your Cash", data: s.hist.cash, money: true};
+  if (kind === "health") return {name: "Your Health", data: s.hist.health, min: 0, max: 100};
+  if (kind === "debt") return {name: "Your Debt", data: s.hist.debt, money: true};
+  const N = normal(city, drug);
+  return {name: `${DRUGS[drug].name} in ${CITIES[city].name}`, data: s.hist.price[city][drug], money: true, range: [idiv(N,2), N + idiv(N,2)], offset: s.hist.pre || 0};
+}
+function drawChart(cv, ser, opt={}) {
+  const dpr = devicePixelRatio || 1, w = cv.clientWidth, ht = cv.clientHeight;
+  if (!w || !ht) return;
+  cv.width = w*dpr; cv.height = ht*dpr;
+  const c = cv.getContext("2d"); c.scale(dpr, dpr); c.clearRect(0,0,w,ht);
+  const d = ser.data; if (!d.length) return;
+  const pad = opt.axes ? {l: 70, r: 28, t: 10, b: 22} : {l: 3, r: 3, t: 3, b: 3};
+  let lo = ser.min ?? Math.min(...d, ...(ser.range || [])), hi = ser.max ?? Math.max(...d, ...(ser.range || []));
+  if (hi === lo) { hi += 1; lo -= 1; }
+  const X = i => pad.l + (d.length < 2 ? (w - pad.l - pad.r)/2 : i*(w - pad.l - pad.r)/(d.length - 1));
+  const Y = v => pad.t + (hi - v)*(ht - pad.t - pad.b)/(hi - lo);
+  const line = (y, dash) => { c.save(); c.strokeStyle = "#808080"; c.setLineDash(dash || []); c.beginPath(); c.moveTo(pad.l, Y(y)); c.lineTo(w - pad.r, Y(y)); c.stroke(); c.restore(); };
+  if (opt.axes) {
+    c.font = "11px Tahoma, sans-serif"; c.fillStyle = "#000"; c.textAlign = "right"; c.textBaseline = "middle";
+    [hi, (hi+lo)/2, lo].forEach(v => { c.fillText(ser.money ? fmt(v) : Math.round(v), pad.l - 6, Y(v)); c.strokeStyle = "#e4e4e4"; c.beginPath(); c.moveTo(pad.l, Y(v)); c.lineTo(w - pad.r, Y(v)); c.stroke(); });
+    c.textAlign = "center"; c.textBaseline = "top";
+    const step = Math.max(1, Math.ceil(d.length/10));
+    for (let i = 0; i < d.length; i += step) c.fillText("Day " + (i+1-(ser.offset||0)), X(i), ht - pad.b + 6);
+  }
+  if (ser.range) { line(ser.range[0]); line(ser.range[1]); line(d.reduce((a,b)=>a+b,0)/d.length, [3,3]); }
+  if (ser.offset && d.length > ser.offset) { c.save(); c.strokeStyle = "#c0c0c0"; c.setLineDash([2,2]); c.beginPath(); c.moveTo(X(ser.offset), pad.t); c.lineTo(X(ser.offset), ht - pad.b); c.stroke(); c.restore(); }
+  c.strokeStyle = "#000080"; c.lineWidth = opt.axes ? 2 : 1.5; c.beginPath();
+  d.forEach((v,i) => i ? c.lineTo(X(i), Y(v)) : c.moveTo(X(i), Y(v))); c.stroke();
+  c.fillStyle = "#000080"; c.beginPath(); c.arc(X(d.length-1), Y(d[d.length-1]), opt.axes ? 3.5 : 2, 0, 7); c.fill();
+}
+function miniList() { const s = game.s; return [["cash"],["health"],["debt"], ...(game.lv.world ? DRUGS.map((d,i)=>["drug", s.city, i]) : [])]; }
+let miniTab = "chart";
+function drawWorld() {
+  const box = $("miniW"), s = game.s, d = miniDrug >= 0 ? miniDrug : (sel.market >= 0 ? sel.market : sel.stock);
+  if (d < 0 || d == null) { $("miniLbl").textContent = ""; box.replaceChildren(h("span", {class: "none"}, "Select a drug to see its price in every city.")); return; }
+  $("miniLbl").textContent = DRUGS[d].name;
+  const prices = CITIES.map((c,i) => s.market[i][d].p), lo = Math.min(...prices), hi = Math.max(...prices);
+  box.replaceChildren(...CITIES.flatMap((c,i) => {
+    const cls = i === s.city ? "here" : prices[i] === lo ? "lo" : prices[i] === hi ? "hi" : "";
+    return [h("span", {class: cls || null, title: c.name}, c.name), h("span", {class: "p " + cls}, fmt(prices[i]))];
+  }));
+}
+function drawMini() {
+  const cv = $("miniC"), world = !!game;
+  $("hWorld").hidden = !world; if (!world) miniTab = "chart";
+  $("hChart").setAttribute("aria-selected", miniTab === "chart"); $("hWorld").setAttribute("aria-selected", miniTab === "world");
+  cv.hidden = miniTab !== "chart"; $("miniW").hidden = miniTab !== "world";
+  if (!game) { $("miniLbl").textContent = ""; cv.getContext("2d").clearRect(0,0,cv.width,cv.height); return; }
+  if (miniTab === "world") return drawWorld();
+  let ser;
+  if (game.lv.world && miniDrug >= 0 && !miniManual) {
+    ser = series("drug", game.s.city, miniDrug);
+    const d = ser.data; ser.name = `${DRUGS[miniDrug].name}: ${fmt(d[d.length-1] ?? 0)}`;
+  } else {
+    const list = miniList(); miniIdx %= list.length; ser = series(...list[miniIdx]);
+  }
+  $("miniLbl").textContent = ser.name; drawChart(cv, ser);
+}
+
+/* ---------- actions ---------- */
+async function run(fn) { if (busy) return; busy = true; render(); try { await fn(); } finally { busy = false; ui.save(); render(); } }
+
+function doBuy() {
+  const g = game, d = sel.market; if (!g || g.s.over || d < 0) return;
+  const max = g.maxBuy(d); if (!max) return;
+  run(async () => {
+    const p = g.price(d);
+    const n = await askNumber(sp("Buying %s", DRUGS[d].name), sp("%s is currently selling for %s per unit. With your available funds, you can buy %s.", DRUGS[d].name, fmt(p), max === 1 ? "1 unit" : num(max) + " units"), "How many do you wish to buy?", max, max);
+    if (n) g.buy(d, n);
+  });
+}
+function doSell() {
+  const g = game, d = sel.stock; if (!g || g.s.over || d < 0 || !g.canSell(d)) return;
+  run(async () => {
+    const x = g.s.inv[d], p = g.price(d), diff = p - x.a;
+    const tail = diff === 0 ? ", and will break even in this deal." : diff < 0 ? sp(" for a loss of %s per unit.", fmt(-diff)) : sp(" for a profit of %s per unit.", fmt(diff));
+    const n = await askNumber(sp("Selling %s", DRUGS[d].name), sp("%s is currently being bought for %s per unit. You have %s to sell%s", DRUGS[d].name, fmt(p), x.q === 1 ? "a unit" : num(x.q) + " units", tail), "How many do you wish to sell?", x.q, x.q);
+    if (n) g.sell(d, n);
+  });
+}
+function doDump() {
+  const g = game, d = sel.stock; if (!g || g.s.over || d < 0) return;
+  run(async () => {
+    const x = g.s.inv[d];
+    const n = await askNumber(sp("Dumping %s", DRUGS[d].name), sp("You have %s of %s.", x.q === 1 ? "a unit" : num(x.q) + " units", DRUGS[d].name), "How many do you wish to dump?", x.q, x.q);
+    if (n) g.dump(d, n);
+  });
+}
+function doStay() { if (game && !game.s.over && !game.blocked()) run(() => game.nextDay()); }
+function doFly(anchor) {
+  const g = game, s = g.s;
+  popup(anchor, CITIES.map((c,i) => i === s.city ? null : {label: sp("%s, %s (%s)", c.name, c.country, fmt(g.flightCost(i))), disabled: g.flightCost(i) > s.cash, run: () => flyTo(i)}).filter(Boolean));
+}
+function flyTo(c) {
+  const g = game;
+  run(async () => {
+    let cans = 0;
+    if (g.carried() > 0) {
+      const need = g.scentNeeded(), have = g.s.items[NOSCENT].own;
+      const text = sp("To make your drugs undetectable to the drug-sniffing dogs, you will need to use %d %s of No-Scent. You have %d %s.%s", need, need === 1 ? "can" : "cans", have, have === 1 ? "can" : "cans", have < need ? " Even though you don't have enough, the more that you do use, the better." : "");
+      const n = await askNumber("Using No-Scent", text, "How many cans do you wish to use?", Math.min(need, have), have, 0);
+      if (n == null) return;
+      cans = n;
+    }
+    sel.market = -1;
+    await g.fly(c, cans);
+  });
+}
+
+/* ---------- places ---------- */
+function finances() {
+  const g = game, s = g.s;
+  return dialog("Finances", 560, (b, close) => {
+    let mode = "dsome", lsel = -1;
+    const cashL = h("span"), bankL = h("span"), debtL = h("span");
+    const amt = h("input", {class: "field sunken", id: "bankAmt", inputmode: "numeric", autocomplete: "off", style: "width:120px", value: "0"});
+    const modes = [["dsome","Deposit some"],["dall","Deposit all"],["dbut","Deposit all but"],["wsome","Withdraw some"],["wall","Withdraw all"],["wbut","Withdraw all but"]];
+    const radios = h("div", {class: "radios"}, modes.map(([k,t]) => h("label", {}, h("input", {type: "radio", name: "bankmode", value: k, checked: k === mode, onchange: () => { mode = k; paint(); }}), " ", t)));
+    const doIt = btn("Do it!", () => {
+      const v = parseInt(amt.value.replace(/[^0-9]/g,""), 10) || 0;
+      if (mode === "dsome") g.deposit(v); else if (mode === "dall") g.deposit(s.cash); else if (mode === "dbut") g.deposit(s.cash - v);
+      else if (mode === "wsome") g.withdraw(v); else if (mode === "wall") g.withdraw(s.bank); else g.withdraw(s.bank - v);
+      amt.value = "0"; paint(); render();
+    });
+    const lv = h("div", {class: "lv sunken wide", style: "height:132px"});
+    const bBor = btn("Borrow...", async () => {
+      const i = lsel, S = SHARKS[i], lim = g.borrowLimit(i);
+      const n = await askNumber(sp("Borrowing from %s", S.name), sp("%s will let you borrow up to %s at %d%% interest, compounded daily. You will have %d days to repay the loan or %s and his boys will come looking for you.", S.name, fmt(lim), S.rate, S.days, S.name), "How much to borrow?", lim, lim);
+      if (n) g.borrow(i, n); paint(); render();
+    });
+    const bRep = btn("Repay", async () => {
+      const i = lsel, L = s.sharks[i], S = SHARKS[i], c = g.repayCost(i);
+      if (s.cash < c) { await message("Repay", c > L.debt ? sp("With the %s early-payment penalty, you don't have enough to repay %s.", fmt(L.pen), S.name) : sp("You don't have enough to repay %s!", S.name), "bad"); return; }
+      const ok = await confirmBox("Repay", c > L.debt ? sp("%s will charge an early payment penalty of %s. Pay %s in total?", S.name, fmt(L.pen), fmt(c)) : sp("Give %s the %s?", S.name, fmt(c)));
+      if (ok) g.repay(i); paint(); render();
+    });
+    const paint = () => {
+      cashL.textContent = fmt(s.cash); bankL.textContent = fmt(s.bank); debtL.textContent = fmt(g.debt());
+      const needAmt = mode.endsWith("some") || mode.endsWith("but"); amt.disabled = !needAmt;
+      listView(lv, [{t: "Name"}, {t: "Debt", n: 1, w: "21%"}, {t: "Rate", n: 1, w: "11%"}, {t: "Pays", n: 1, w: "21%"}, {t: "Days Left", n: 1, w: "15%"}],
+        SHARKS.map((S,i) => { const L = s.sharks[i]; return {key: i, cells: [S.name, L.debt ? fmt(L.debt) : "", S.rate + "%", fmt(g.borrowLimit(i)), L.debt ? String(S.days - L.el) : String(S.days)]}; }),
+        {sel: lsel, onSelect: k => { lsel = k; paint(); }});
+      bBor.disabled = lsel < 0 || !!s.sharks[lsel].debt || g.borrowLimit(lsel) <= 0;
+      bRep.disabled = lsel < 0 || !s.sharks[lsel].debt;
+    };
+    b.append(
+      h("div", {class: "group"}, h("span", {class: "legend"}, "Bank"),
+        h("div", {class: "row", style: "gap:18px;margin-bottom:8px"}, h("span", {}, "Cash: ", cashL), h("span", {}, "In Bank: ", bankL)),
+        radios, h("div", {class: "row", style: "margin-top:8px"}, h("label", {for: "bankAmt"}, "Amount"), amt, doIt)),
+      h("div", {class: "group"}, h("span", {class: "legend"}, "Loans"), lv,
+        h("div", {class: "row", style: "margin-top:8px;justify-content:space-between"}, h("span", {}, "Debt: ", debtL), h("span", {class: "row"}, bBor, bRep))),
+      h("div", {class: "row end"}, btn("Done", () => close(true), {focus: true})));
+    paint();
+  });
+}
+
+function shopping() {
+  const g = game, s = g.s;
+  return dialog("Shopping", 560, (b, close) => {
+    let ssel = null, isel = null;
+    const lvS = h("div", {class: "lv sunken", style: "height:150px"}), lvI = h("div", {class: "lv sunken", style: "height:96px"});
+    const info = h("div", {class: "msg", style: "min-height:16px"}), cashL = h("span");
+    const typeOf = it => it.armor ? "Armor" : it.acc ? "Weapon" : "Item";
+    const key = (i,a) => i + (a ? "a" : "w");
+    const bBuy = btn("Buy", async () => {
+      const [i,a] = ssel, it = ITEMS[i], max = a ? g.shopMaxAmmo(i) : g.shopMaxItem(i), nm = a ? it.ammoPl : it.plural;
+      const n = await askNumber("Buying", sp("You can buy %d %s for %s each.", max, nm, fmt(a ? it.ammoPrice : it.price)), "How many to buy?", max, max);
+      if (n) g.buyItem(i, n, a); paint(); render();
+    });
+    const bSell = btn("Sell", async () => {
+      const [i,a] = isel, it = ITEMS[i], max = a ? s.items[i].ammo : s.items[i].own;
+      const n = await askNumber("Selling", sp("You can sell %d %s for %s each.", max, a ? it.ammoPl : it.plural, fmt(a ? it.ammoPrice : it.price)), "How many to sell?", max, max);
+      if (n) g.sellItem(i, n, a); paint(); render();
+    });
+    const paint = () => {
+      const srows = [];
+      ITEMS.forEach((it,i) => {
+        if (it.name && it.price) srows.push({key: key(i,0), i, a: false, cells: [it.name, typeOf(it), fmt(it.price)]});
+        if (it.ammo) srows.push({key: key(i,1), i, a: true, cells: [it.ammo, "Ammo", fmt(it.ammoPrice)]});
+      });
+      listView(lvS, [{t: "Item"}, {t: "Type", w: "22%"}, {t: "Price", n: 1, w: "26%"}], srows, {sel: ssel && key(...ssel), onSelect: k => { const r = srows.find(r => r.key === k); ssel = [r.i, r.a]; paint(); }});
+      const irows = [];
+      ITEMS.forEach((it,i) => {
+        const o = s.items[i];
+        if (it.name && o.own) irows.push({key: key(i,0), i, a: false, cells: [it.name, typeOf(it), num(o.own), fmt(it.price)]});
+        if (it.ammo && o.ammo) irows.push({key: key(i,1), i, a: true, cells: [it.ammo, "Ammo", num(o.ammo), fmt(it.ammoPrice)]});
+      });
+      if (isel && !irows.some(r => r.key === key(...isel))) isel = null;
+      listView(lvI, [{t: "Item"}, {t: "Type", w: "18%"}, {t: "Qty", n: 1, w: "13%"}, {t: "Sell for", n: 1, w: "24%"}], irows, {sel: isel && key(...isel), empty: "You aren't carrying anything.", onSelect: k => { const r = irows.find(r => r.key === k); isel = [r.i, r.a]; paint(); }});
+      cashL.textContent = fmt(s.cash);
+      if (ssel) {
+        const [i,a] = ssel, it = ITEMS[i], max = a ? g.shopMaxAmmo(i) : g.shopMaxItem(i);
+        const o = s.items[i];
+        info.textContent = !a && o.own >= it.maxCarry && it.acc ? sp("You are already carrying as many %s as you can.", it.plural)
+          : a && o.ammo >= it.maxAmmo ? sp("Your %s is maxed!", it.ammo)
+          : max ? sp("You can buy %d %s for %s each.", max, max === 1 ? (a ? it.ammo : it.name) : (a ? it.ammoPl : it.plural), fmt(a ? it.ammoPrice : it.price)) : "You can't afford that!";
+        bBuy.disabled = !max;
+      } else { info.textContent = "Select an item to see how many you can buy."; bBuy.disabled = true; }
+      bSell.disabled = !isel;
+    };
+    b.append(
+      h("div", {class: "group"}, h("span", {class: "legend"}, "Store's Inventory"), lvS, h("div", {class: "row", style: "margin-top:6px;justify-content:space-between;flex-wrap:nowrap"}, info, bBuy)),
+      h("div", {class: "group"}, h("span", {class: "legend"}, "Your Inventory"), lvI, h("div", {class: "row", style: "margin-top:6px;justify-content:space-between"}, h("span", {}, "Cash: ", cashL), bSell)),
+      h("div", {class: "row end"}, btn("Done", () => close(true), {focus: true})));
+    paint();
+  });
+}
+
+function hospital() {
+  const g = game, s = g.s;
+  return dialog("Hospital", 460, (b, close) => {
+    const slider = h("input", {type: "range", id: "healTo", min: "0", max: "100", value: "100", "aria-label": "Desired health"});
+    const bar = h("div", {class: "bar sunken", style: "height:18px"}, h("i"));
+    const cost = h("span"), cash = h("span");
+    const ok = btn("OK", () => { g.heal(+slider.value); close(true); });
+    const paint = () => {
+      const t = +slider.value; bar.firstChild.style.width = t + "%"; bar.classList.toggle("low", t < 30);
+      const c = g.healCost(t); cash.textContent = fmt(s.cash);
+      cost.textContent = c < 0 ? "Hey man, we're into healing here, not killing!" : fmt(c);
+      ok.disabled = c <= 0 || c > s.cash;
+    };
+    slider.addEventListener("input", paint);
+    b.append(h("div", {class: "group"}, h("span", {class: "legend"}, "Move the pointer to desired health"), bar, h("div", {style: "margin:8px 0"}, slider),
+        h("div", {}, "Your health: ", String(Math.max(0, s.health))), h("div", {}, "Cash: ", cash), h("div", {}, "Cost for treatment: ", cost)),
+      h("div", {class: "row end"}, ok, btn("Cancel", () => close(false))));
+    paint();
+  });
+}
+
+function vault() {
+  const g = game, s = g.s;
+  const backup = JSON.stringify({inv: s.inv, v: s.vault[s.city]});
+  return dialog(sp("The Vault in %s", CITIES[s.city].name), 620, (b, close) => {
+    let a = -1, v = -1;
+    const lA = h("div", {class: "lv sunken", style: "height:180px"}), lB = h("div", {class: "lv sunken", style: "height:180px"});
+    const into = btn("Into Vault >>", async () => {
+      const x = s.inv[a]; const n = await askNumber(sp("Moving %s into the Vault", DRUGS[a].name), sp("You have %s of %s.", x.q === 1 ? "a unit" : num(x.q) + " units", DRUGS[a].name), "How many do you wish to vault?", x.q, x.q);
+      if (n) g.toVault(a, n); paint();
+    });
+    const from = btn("<< From Vault", async () => {
+      const x = s.vault[s.city][v], max = Math.min(x.q, g.room());
+      const n = await askNumber(sp("Moving %s out of the Vault", DRUGS[v].name), sp("You have room for %s of %s from the vault.", max === 1 ? "a unit" : num(max) + " units", DRUGS[v].name), "How many do you wish to remove?", max, max);
+      if (n) g.fromVault(v, n); paint();
+    });
+    const paint = () => {
+      const ra = DRUGS.map((d,i) => s.inv[i].q ? {key: i, cells: [d.name, num(s.inv[i].q)]} : null).filter(Boolean);
+      const rb = DRUGS.map((d,i) => s.vault[s.city][i].q ? {key: i, cells: [d.name, num(s.vault[s.city][i].q)]} : null).filter(Boolean);
+      if (!ra.some(r => r.key === a)) a = -1; if (!rb.some(r => r.key === v)) v = -1;
+      listView(lA, [{t: "Drug"}, {t: "Qty", n: 1, w: "34%"}], ra, {sel: a, empty: "Nothing to store.", onSelect: k => { a = k; paint(); }});
+      listView(lB, [{t: "Drug"}, {t: "Qty", n: 1, w: "34%"}], rb, {sel: v, empty: "The vault is empty.", onSelect: k => { v = k; paint(); }});
+      into.disabled = a < 0; from.disabled = v < 0 || g.room() <= 0;
+    };
+    b.append(h("div", {class: "cols"},
+        h("div", {class: "group"}, h("span", {class: "legend"}, "Your stock"), lA),
+        h("div", {class: "group mv"}, h("span", {class: "legend"}, "Move"), into, from),
+        h("div", {class: "group"}, h("span", {class: "legend"}, "In the Vault"), lB)),
+      h("div", {class: "msg"}, "The vault is out of the way, so you can only get to it once a day."),
+      h("div", {class: "row end"}, btn("OK", () => { s.vaultUsed = true; close(true); }, {focus: true}), btn("Cancel", () => { const o = JSON.parse(backup); s.inv = o.inv; s.vault[s.city] = o.v; close(false); })));
+    paint();
+  });
+}
+
+function shipping() {
+  const g = game, s = g.s;
+  return dialog(sp("Shipping from %s", CITIES[s.city].name), 640, (b, close) => {
+    const pend = DRUGS.map(() => 0);
+    let a = -1, p = -1, dest = -1, speed = 0, shipper = -1;
+    const lA = h("div", {class: "lv sunken", style: "height:130px"}), lB = h("div", {class: "lv sunken", style: "height:130px"});
+    const lD = h("div", {class: "lv sunken", style: "height:120px"}), lS = h("div", {class: "lv sunken", style: "height:96px"});
+    const total = () => pend.reduce((t,x)=>t+x,0);
+    const bIn = btn("Ship >>", async () => {
+      const max = s.inv[a].q - pend[a];
+      const n = await askNumber(sp("Moving %s into Shipping", DRUGS[a].name), sp("You have %s of %s.", max === 1 ? "a unit" : num(max) + " units", DRUGS[a].name), "How many do you wish to ship?", max, max);
+      if (n) pend[a] += n; paint();
+    });
+    const bOut = btn("<< Don't Ship", async () => {
+      const max = pend[p];
+      const n = await askNumber(sp("Moving %s out of Shipping", DRUGS[p].name), sp("You have %s %s in the shipment.", num(max), DRUGS[p].name), "How many do you wish to remove?", max, max);
+      if (n) pend[p] -= n; paint();
+    });
+    const radios = h("div", {class: "radios"}, SPEEDS.map((sd,i) => h("label", {}, h("input", {type: "radio", name: "speed", checked: i === 0, onchange: () => { speed = i; paint(); }}), " ", sd.name)));
+    const ok = btn("OK", () => { if (g.ship(pend.map((q,d)=>({d,q})).filter(x=>x.q), dest, speed, shipper)) close(true); });
+    const paint = () => {
+      const ra = DRUGS.map((d,i) => s.inv[i].q - pend[i] > 0 ? {key: i, cells: [d.name, num(s.inv[i].q - pend[i])]} : null).filter(Boolean);
+      const rb = DRUGS.map((d,i) => pend[i] ? {key: i, cells: [d.name, num(pend[i])]} : null).filter(Boolean);
+      if (!ra.some(r => r.key === a)) a = -1; if (!rb.some(r => r.key === p)) p = -1;
+      listView(lA, [{t: "Drug"}, {t: "Qty", n: 1, w: "36%"}], ra, {sel: a, empty: "Nothing left to ship.", onSelect: k => { a = k; paint(); }});
+      listView(lB, [{t: "Drug"}, {t: "Qty", n: 1, w: "36%"}], rb, {sel: p, empty: "Nothing yet.", onSelect: k => { p = k; paint(); }});
+      listView(lD, [{t: "City"}], CITIES.map((c,i) => i === s.city ? null : {key: i, cells: [c.name]}).filter(Boolean), {sel: dest, onSelect: k => { dest = k; paint(); }});
+      const n = total();
+      listView(lS, [{t: "Shipper"}, {t: "Cost", n: 1, w: "34%"}], SHIPPERS.map((sh,i) => {
+        const c = dest >= 0 ? g.shipCost(i, speed, n, dest) : 0;
+        return {key: i, off: dest >= 0 && n > 0 && c > s.cash, cells: [sh.name, dest >= 0 && n ? fmt(c) : "-"]};
+      }), {sel: shipper, onSelect: k => { shipper = k; paint(); }});
+      bIn.disabled = a < 0; bOut.disabled = p < 0;
+      const cost = dest >= 0 && shipper >= 0 ? g.shipCost(shipper, speed, n, dest) : 0;
+      ok.disabled = !(n && dest >= 0 && shipper >= 0 && cost > 0 && cost <= s.cash);
+    };
+    b.append(h("div", {class: "cols"},
+        h("div", {class: "group"}, h("span", {class: "legend"}, "Your stock"), lA),
+        h("div", {class: "group mv"}, h("span", {class: "legend"}, "Move"), bIn, bOut),
+        h("div", {class: "group"}, h("span", {class: "legend"}, "What you are shipping"), lB)),
+      h("div", {class: "cols", style: "grid-template-columns:minmax(0,0.7fr) minmax(0,1.3fr)"},
+        h("div", {class: "group"}, h("span", {class: "legend"}, "Destination"), lD),
+        h("div", {style: "display:grid;gap:10px;align-content:start;min-width:0"},
+          h("div", {class: "group"}, h("span", {class: "legend"}, "Delivery"), radios),
+          h("div", {class: "group"}, h("span", {class: "legend"}, "Select a shipper"), lS))),
+      h("div", {class: "row end"}, ok, btn("Cancel", () => close(false))));
+    paint();
+  });
+}
+
+/* ---------- info ---------- */
+function simpleList(title, width, cols, rows, empty) {
+  return dialog(title, width, (b, close) => {
+    const lv = h("div", {class: cols.length >= 4 ? "lv sunken wide" : "lv sunken", style: "height:260px"});
+    listView(lv, cols, rows, {empty});
+    b.append(lv, h("div", {class: "row end"}, btn("Close", () => close(true), {focus: true})));
+  });
+}
+function infoVaults() {
+  const s = game.s, rows = [];
+  s.vault.forEach((row,c) => row.forEach((x,d) => { if (x.q) rows.push({key: c*100+d, cells: [CITIES[c].name, DRUGS[d].name, num(x.q), fmt(x.a)]}); }));
+  return simpleList("Vaults", 480, [{t: "City"}, {t: "Drug"}, {t: "Qty", n: 1, w: "16%"}, {t: "Paid", n: 1, w: "22%"}], rows, "You don't have anything stored in any vault.");
+}
+function infoPrices() {
+  const s = game.s;
+  return dialog("World drug prices", 460, (b, close) => {
+    let d = sel.market >= 0 ? sel.market : sel.stock >= 0 ? sel.stock : 0;
+    const pick = h("select", {class: "field sunken", id: "wpDrug", onchange: e => { d = +e.target.value; paint(); }}, DRUGS.map((x,i) => h("option", {value: i, selected: i === d}, x.name)));
+    const lv = h("div", {class: "lv sunken", style: "height:300px"});
+    const paint = () => listView(lv, [{t: "City Name"}, {t: "Price", n: 1, w: "36%"}],
+      CITIES.map((c,i) => ({key: i, cells: [i === s.city ? c.name + " (you)" : c.name, fmt(s.market[i][d].p)]})), {sel: s.city});
+    b.append(h("div", {class: "row"}, h("label", {for: "wpDrug"}, "Drug Name:"), pick), lv,
+      h("div", {class: "msg"}, "Your contacts tell you the going price everywhere, even where nobody is selling today."),
+      h("div", {class: "row end"}, btn("Close", () => close(true), {focus: true})));
+    paint();
+  });
+}
+function infoCities() {
+  const g = game;
+  return simpleList("World cities", 440, [{t: "City"}, {t: "Country"}, {t: "Flight", n: 1, w: "26%"}],
+    CITIES.map((c,i) => ({key: i, cells: [c.name, c.country, i === g.s.city ? "You are here" : fmt(g.flightCost(i))]})));
+}
+function infoShips() {
+  const s = game.s;
+  return simpleList("Shipment status", 600, [{t: "From"}, {t: "Going to"}, {t: "Arrival Day", n: 1, w: "16%"}, {t: "Status", w: "15%"}, {t: "Shipper", w: "28%"}],
+    s.ships.map(sh => ({key: sh.id, cells: [CITIES[sh.from].name, CITIES[sh.to].name, String(sh.arrive), sh.status === 2 ? "Arrived" : sh.status === 1 ? "Delayed" : "In transit", SHIPPERS[sh.shipper].name]})), "You have no shipments on the way.");
+}
+function infoHistory(start) {
+  const s = game.s;
+  return dialog("Viewing History", 680, (b, close) => {
+    let kind = start?.[0] || "cash", city = start?.[1] ?? s.city, drug = start?.[2] ?? 0;
+    const cv = h("canvas"), chart = h("div", {class: "chart sunken"}, cv);
+    const kinds = h("div", {class: "radios"}, [["cash","Cash"],["health","Health"],["debt","Debt"],["drug","Drug price"]].map(([k,t]) => h("label", {}, h("input", {type: "radio", name: "hk", checked: k === kind, onchange: () => { kind = k; paint(); }}), " ", t)));
+    const cSel = h("select", {class: "field sunken", id: "hCity", onchange: e => { city = +e.target.value; kind = "drug"; sync(); paint(); }}, CITIES.map((c,i) => h("option", {value: i, selected: i === city}, c.name)));
+    const dSel = h("select", {class: "field sunken", id: "hDrug", onchange: e => { drug = +e.target.value; kind = "drug"; sync(); paint(); }}, DRUGS.map((d,i) => h("option", {value: i, selected: i === drug}, d.name)));
+    const sync = () => kinds.querySelectorAll("input").forEach((r,i) => r.checked = ["cash","health","debt","drug"][i] === kind);
+    const note = h("div", {class: "msg"});
+    const paint = () => { const ser = series(kind, city, drug); drawChart(cv, ser, {axes: true});
+      note.textContent = kind === "drug" ? "The solid grey lines show the normal price range. The dotted grey line shows the average price." : ser.name + ", day by day."; };
+    b.append(kinds, h("div", {class: "row"}, h("label", {for: "hCity"}, "City:"), cSel, h("label", {for: "hDrug"}, "Drug:"), dSel), chart, note,
+      h("div", {class: "row end"}, btn("Close", () => close(true), {focus: true})));
+    requestAnimationFrame(paint);
+  });
+}
+
+/* ---------- game ---------- */
+function about() {
+  return dialog("About Drug Lord", 400, (b, close) => {
+    b.append(h("div", {class: "msg big"}, h("b", {}, "Drug Lord"), "\nA browser remake of Drug Lord 2.2 by Fred Bulback (Geek Hideout, 2000-2003).\n\nThe rules, prices, cities, ranks, loan sharks, weapons and enemies were read straight out of the original program, so the odds play out the way they did back then.\n\nThis is only a game. Don't sell drugs, don't buy drugs, and never use them."),
+      h("div", {class: "row end"}, btn("OK", () => close(true), {focus: true})));
+  });
+}
+function docs() {
+  const tr = (...c) => h("tr", {}, c.map(x => h("td", {}, x)));
+  return dialog("How to play", 620, (b, close) => {
+    b.append(h("div", {class: "docs sunken"},
+      h("h3", {}, "The goal"), h("p", {}, "Turn your $2,000 (half of it borrowed from Buddles) into as much money as you can before time runs out. You start with 30 days. Your final score is your cash plus your bank balance, minus what you still owe. Drugs left in your stash count for nothing."),
+      h("h3", {}, "Each day"), h("p", {}, "Pick a drug in The Market and click Buy, or pick one in your stash and click Sell. You can only sell what the market is buying today. When you're done, click Stay Here to sleep, or Fly Away to wake up somewhere else. Every new day prices move, rumors spread, and something may happen to you."),
+      h("p", {}, "Each city has its own price level. Beijing, Moscow and St Petersburg pay the most; Detroit and San Francisco are the cheapest. Prices drift, and now and then they crash or go through the roof. Rumors are right about 7 times out of 10."),
+      h("h3", {}, "Ranks"), h("p", {}, "Hold enough money (cash plus bank) for 3 days in a row and you move up. Each rank lets you carry more and gives 5 extra days the first time you reach it. Living costs go up too, and you can be demoted if your money drops."),
+      h("table", {}, h("tbody", {}, tr("Wannabe","$0","10 units"), tr("Small-time Operator","$5,000","25 units"), tr("Dealer","$40,000","100 units"), tr("Big-Time Dealer","$300,000","600 units"), tr("Distributor","$2,500,000","3,500 units"), tr("Drug Lord","$15,000,000","20,000 units"))),
+      h("h3", {}, "Places"), h("p", {}, "Finances: the bank keeps money safe from muggers. Loan sharks lend a multiple of what you're worth at brutal daily interest. Pay late and they come to hurt you; pay early and there's a fee."),
+      h("p", {}, "Shopping: weapons, ammo, armor and No-Scent. Armor early on is the difference between getting rich and getting killed. Hospital: small wounds are cheap to fix, near-death is very expensive. Vault: store drugs in any city, once a day. Shipping: send drugs to another city. Cheap shippers lose more packages, and you have to be there to collect within 3 days."),
+      h("h3", {}, "Flying"), h("p", {}, "Tickets cost more the farther you go. Spray your drugs with No-Scent, one can per 100 units, or the airport dogs may sniff them out. You can carry 10 cans."),
+      h("h3", {}, "Levels"), h("p", {}, "Pick a level from 1 to 10 when you start a game. Level 7 uses the original rules. Below it you get more rumors, rumors you can trust, weaker enemies, easier escapes and more lucky finds. Above it, rumors get rare and unreliable, the price history disappears, and fights get nastier. Level 10 gives you no tips at all and no price trends, only the world prices: you're on your own."),
+      h("h3", {}, "Fights"), h("p", {}, "Police, gangs, dogs and worse will come after you. Surrender (police take your drugs, gangs take your cash too), run, offer a bribe, or fight with whatever you're carrying. Search the bodies afterwards.")),
+      h("div", {class: "row end"}, btn("OK", () => close(true), {focus: true})));
+  });
+}
+function scores(highlight) {
+  const list = store.get(SCORES) || [];
+  return simpleList("High Scores", 600, [{t: "#", n: 1, w: "7%"}, {t: "Name"}, {t: "Level", w: "19%"}, {t: "Rank", w: "22%"}, {t: "Score", n: 1, w: "19%"}, {t: "Days", n: 1, w: "9%"}],
+    list.map((x,i) => { const lv = x.level || 7; return {key: i, cells: [String(i+1), (x.id === highlight ? "▶ " : "") + x.name, `${lv} ${LEVELS[lv-1].name}`, cap1(x.rank), fmt(x.score), String(x.days)]}; }), "No scores yet. Finish a game to get on the board.");
+}
+async function maybeHighScore() {
+  const s = game?.s; if (!s || !s.over || s.scored) return;
+  s.scored = true; ui.save();
+  const list = store.get(SCORES) || [];
+  if (s.score <= 0 || (list.length >= 50 && s.score <= list[49].score)) return;
+  const name = await dialog("High Score!", 400, (b, close) => {
+    const inp = h("input", {class: "field sunken", id: "hsName", maxlength: "30", value: store.get("druglord.name") || "", autofocus: true, style: "flex:1"});
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") close(inp.value.trim() || "no name"); });
+    b.append(h("div", {class: "msg big"}, sp("Congratulations! With %s you made it into the top 50. Enter your name for the board.", fmt(s.score))),
+      h("div", {class: "row"}, h("label", {for: "hsName"}, "Your name:"), inp), h("div", {class: "row end"}, btn("OK", () => close(inp.value.trim() || "no name"))));
+  });
+  if (!name) return;
+  store.set("druglord.name", name);
+  const id = Date.now();
+  list.push({id, name, score: s.score, level: s.level, rank: RANKS[s.rank].name, days: s.day, dead: s.dead});
+  list.sort((a,b) => b.score - a.score); store.set(SCORES, list.slice(0, 50));
+  scores(id);
+}
+function pickLevel() {
+  return dialog("New Game", 520, (b, close) => {
+    let lvl = store.get("druglord.level") || 7;
+    const lv = h("div", {class: "lv sunken", style: "height:auto;max-height:62vh"});
+    const desc = h("div", {class: "msg", style: "min-height:34px"});
+    const paint = () => {
+      listView(lv, [{t: "", n: 1, w: "34px"}, {t: "Level"}, {t: "Market tips", w: "28%"}, {t: "Fights", w: "22%"}],
+        LEVELS.map((L,i) => ({key: i+1, cells: [String(i+1), L.name + (i === 6 ? " (original)" : ""),
+          !L.rumors[0] ? "None" : L.truth >= 90 ? "Many, reliable" : L.truth >= 75 ? "Frequent" : L.truth >= 70 ? "Original" : "Rare, shaky",
+          L.count < 0.8 ? "Easy" : L.count < 1 ? "Softer" : L.count === 1 ? "Original" : "Harder"]})),
+        {sel: lvl, onSelect: k => { lvl = k; paint(); }, onActivate: k => close(k)});
+      desc.textContent = `Level ${lvl}: ${LEVELS[lvl-1].tag}`;
+    };
+    b.append(h("div", {class: "msg big"}, "Choose your level. 1 is the easiest, 10 the hardest. Level 7 plays exactly like the original game."), lv, desc,
+      h("div", {class: "row end"}, btn("Start", () => close(lvl), {focus: true}), btn("Cancel", () => close(null))));
+    paint();
+  });
+}
+function newGame() {
+  run(async () => {
+    if (game && !game.s.over) {
+      if (!(await confirmBox("Quit", "Are you sure you want to be a quitter?"))) return;
+      game.quit(); return;
+    }
+    const level = await pickLevel();
+    if (!level) return;
+    store.set("druglord.level", level);
+    sel = {market: -1, stock: -1}; miniIdx = 0; miniDrug = -1; miniManual = false; tab = "market";
+    game = new Game(null, ui, level);
+    await game.start();
+  });
+}
+
+/* ---------- wiring ---------- */
+$("bBuy").onclick = doBuy; $("bSell").onclick = doSell; $("bDump").onclick = doDump;
+$("bStay").onclick = doStay; $("bFly").onclick = e => doFly(e.currentTarget);
+$("bNew").onclick = newGame; $("bAbout").onclick = about; $("bDocs").onclick = docs; $("bScores").onclick = () => scores();
+$("bPlaces").onclick = e => popup(e.currentTarget, [
+  {label: "Finances...", run: () => run(finances)}, {label: "Shopping...", run: () => run(shopping)}, {label: "Hospital...", run: () => run(hospital)},
+  {label: "Vault...", disabled: game.s.vaultUsed, run: () => run(vault)}, {label: "Shipping...", disabled: !game.carried(), run: () => run(shipping)}]);
+$("bInfo").onclick = e => popup(e.currentTarget, [
+  {label: "Vaults...", run: infoVaults}, {label: "World drug prices...", run: infoPrices}, {label: "World cities...", run: infoCities},
+  {label: "Shipment status...", run: infoShips}, {label: "History...", disabled: !game.lv.world, run: () => infoHistory()}]);
+const cycle = () => {
+  if (!game) return;
+  if (game.lv.world && miniDrug >= 0 && !miniManual) { miniManual = true; miniIdx = 0; }
+  else if (miniManual && miniIdx === 2 && miniDrug >= 0 && game.lv.world) miniManual = false;
+  else miniIdx = (miniIdx + 1) % 3;
+  drawMini();
+};
+$("tMarket").onclick = () => { tab = "market"; render(); };
+$("tStock").onclick = () => { tab = "stock"; render(); };
+$("bGame").onclick = e => popup(e.currentTarget, [
+  {label: (soundOn() ? "✓ " : "") + "Sound", run: () => { $("snd").checked = !soundOn(); $("snd").onchange({target: $("snd")}); }},
+  {label: "About...", run: about}, {label: "Docs...", run: docs}, {label: "High Scores...", run: () => scores()},
+  {label: game && !game.s.over ? "Quit" : "New Game", disabled: busy, run: newGame}]);
+$("miniC").onclick = cycle;
+$("hChart").onclick = () => { miniTab = "chart"; drawMini(); };
+$("hWorld").onclick = () => { miniTab = "world"; if (miniDrug < 0) { const d = sel.market >= 0 ? sel.market : sel.stock; if (d >= 0) miniDrug = d; } drawMini(); };
+$("miniC").onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); cycle(); } };
+$("miniC").oncontextmenu = e => { if (!game || !game.lv.world) return; e.preventDefault(); infoHistory(!miniManual && miniDrug >= 0 ? ["drug", game.s.city, miniDrug] : miniList()[miniIdx % 3]); };
+document.addEventListener("keydown", e => {
+  if (document.querySelector(".veil, .menu") || e.ctrlKey || e.metaKey || e.altKey || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+  const k = e.key.toLowerCase();
+  const map = {b: "bBuy", s: "bSell", d: "bDump", a: "bAbout", o: "bDocs", i: "bScores", n: "bNew"};
+  if (map[k] && !$(map[k]).disabled) { e.preventDefault(); $(map[k]).click(); }
+});
+addEventListener("resize", () => drawMini());
+
+/* ---------- opening riff: an original doom riff in drop C, played with Web Audio ---------- */
+const Music = (() => {
+  let ctx = null, bus = null;
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+  function curve(k) { const n = 2048, c = new Float32Array(n); for (let i = 0; i < n; i++) { const x = i*2/n - 1; c[i] = (1 + k) * x / (1 + k * Math.abs(x)); } return c; }
+  let noiseBuf = null;
+  function noise() { if (noiseBuf) return noiseBuf; noiseBuf = ctx.createBuffer(1, ctx.sampleRate*2, ctx.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1; return noiseBuf; }
+  function env(g, t, peak, a, hold, rel) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.setValueAtTime(peak, t + a + hold); g.gain.exponentialRampToValueAtTime(0.0001, t + a + hold + rel); }
+  function guitarChain(pan) {
+    const pre = ctx.createGain(); pre.gain.value = 3.2;
+    const ws = ctx.createWaveShaper(); ws.curve = curve(90); ws.oversample = "4x";
+    const hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 70;
+    const mid = ctx.createBiquadFilter(); mid.type = "peaking"; mid.frequency.value = 650; mid.Q.value = 0.8; mid.gain.value = -5;
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 3600; lp.Q.value = 0.9;
+    const cab = ctx.createBiquadFilter(); cab.type = "peaking"; cab.frequency.value = 110; cab.gain.value = 5;
+    const out = ctx.createGain(); out.gain.value = 0.16;
+    const p = ctx.createStereoPanner(); p.pan.value = pan;
+    pre.connect(ws); ws.connect(hp); hp.connect(cab); cab.connect(mid); mid.connect(lp); lp.connect(out); out.connect(p); p.connect(bus);
+    return pre;
+  }
+  let gL, gR, bass;
+  function chord(t, root, dur, opt = {}) {
+    const ivs = opt.single ? [0] : [0, 7, 12];
+    [[gL, -7], [gR, 7]].forEach(([dest, cents]) => ivs.forEach(iv => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "sawtooth"; o.frequency.setValueAtTime(hz(root + iv), t); o.detune.value = cents + (iv ? 3 : 0);
+      if (opt.bendTo != null) o.frequency.exponentialRampToValueAtTime(hz(opt.bendTo + iv), t + dur*0.9);
+      if (opt.vib) { const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = 5.5; lg.gain.value = 14; l.connect(lg); lg.connect(o.detune); l.start(t + dur*0.35); l.stop(t + dur + 0.3); }
+      env(g, t, opt.mute ? 0.45 : 0.9, 0.004, Math.max(0.01, dur - (opt.mute ? 0.09 : 0.05)), opt.mute ? 0.05 : 0.12);
+      o.connect(g); g.connect(dest); o.start(t); o.stop(t + dur + 0.25);
+    }));
+    const b = ctx.createOscillator(), bg = ctx.createGain();
+    b.type = "square"; b.frequency.setValueAtTime(hz(root - 12), t);
+    if (opt.bendTo != null) b.frequency.exponentialRampToValueAtTime(hz(opt.bendTo - 12), t + dur*0.9);
+    env(bg, t, opt.mute ? 0.18 : 0.26, 0.006, Math.max(0.01, dur - 0.06), 0.1);
+    b.connect(bg); bg.connect(bass); b.start(t); b.stop(t + dur + 0.2);
+  }
+  function kick(t) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(38, t + 0.14);
+    env(g, t, 1.1, 0.002, 0.04, 0.32); o.connect(g); g.connect(bus); o.start(t); o.stop(t + 0.45);
+  }
+  function snare(t) {
+    const n = ctx.createBufferSource(); n.buffer = noise();
+    const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 1900; f.Q.value = 0.7;
+    const g = ctx.createGain(); env(g, t, 0.55, 0.002, 0.03, 0.26);
+    n.connect(f); f.connect(g); g.connect(bus); n.start(t, Math.random()); n.stop(t + 0.4);
+    const o = ctx.createOscillator(), og = ctx.createGain(); o.type = "triangle"; o.frequency.setValueAtTime(190, t); o.frequency.exponentialRampToValueAtTime(140, t + 0.1);
+    env(og, t, 0.35, 0.002, 0.02, 0.12); o.connect(og); og.connect(bus); o.start(t); o.stop(t + 0.2);
+  }
+  function cymbal(t, len, peak) {
+    const n = ctx.createBufferSource(); n.buffer = noise();
+    const f = ctx.createBiquadFilter(); f.type = "highpass"; f.frequency.value = 5200;
+    const g = ctx.createGain(); env(g, t, peak, 0.003, 0.02, len);
+    n.connect(f); f.connect(g); g.connect(bus); n.start(t, Math.random()); n.stop(t + len + 0.1);
+  }
+  // C2 = 36. Drop-C doom: slow, heavy, with a tritone (F#) and a half-step grind (C# against C).
+  const C = 36;
+  function score() {
+    const ev = [];
+    const add = (beat, root, dur, opt) => ev.push({beat, root, dur, opt: opt || {}});
+    // intro: one huge ringing chord, then a slow bend down into the riff
+    add(0, C, 5.5, {vib: true}); add(6, C + 3, 2, {bendTo: C + 2});
+    const riff = (b, last) => {
+      add(b + 0,    C,     1.5);
+      add(b + 1.5,  C,     0.5, {mute: true});
+      add(b + 2,    C + 1, 1);              // the grind: C# against the open C
+      add(b + 3,    C,     0.5, {mute: true}); add(b + 3.5, C, 0.5, {mute: true});
+      add(b + 4,    C + 6, 1.5, {vib: true}); // tritone
+      add(b + 5.5,  C + 5, 0.5);
+      add(b + 6,    C + 3, 1);
+      if (!last) { add(b + 7, C + 2, 0.5); add(b + 7.5, C + 1, 0.5); }
+      else add(b + 7, C + 3, 1, {bendTo: C + 1});
+    };
+    const chug = b => { for (let i = 0; i < 6; i++) add(b + i*0.25, C, 0.25, {mute: true}); add(b + 1.5, C + 10, 0.5); add(b + 2, C + 8, 2, {vib: true}); };
+    riff(8); riff(16); chug(24); add(28, C + 6, 2, {vib: true}); add(30, C + 5, 1); add(31, C + 3, 1, {bendTo: C + 1});
+    riff(32); riff(40, true);
+    add(48, C, 6, {vib: true});
+    return ev;
+  }
+  function drums(t0, beat) {
+    const at = b => t0 + b*beat;
+    cymbal(at(0), 3.5, 0.32); kick(at(0));
+    kick(at(6)); kick(at(7)); snare(at(7.5));
+    for (const b of [8, 16, 32, 40]) {
+      cymbal(at(b), 2.2, 0.22);
+      kick(at(b)); kick(at(b + 1.5)); snare(at(b + 2)); kick(at(b + 3)); kick(at(b + 3.5));
+      kick(at(b + 4)); snare(at(b + 6)); kick(at(b + 7)); if (b !== 40) { snare(at(b + 7.5)); }
+      for (let i = 0; i < 8; i++) cymbal(at(b + i), 0.12, 0.05);
+    }
+    for (let i = 0; i < 6; i++) kick(at(24 + i*0.25));
+    cymbal(at(26), 2, 0.22); snare(at(26)); kick(at(28)); snare(at(30)); kick(at(31)); snare(at(31.5)); snare(at(31.75));
+    cymbal(at(48), 5, 0.38); kick(at(48)); snare(at(48));
+  }
+  function play() {
+    try {
+      stop();
+      ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state === "suspended") ctx.resume().catch(() => {});
+      bus = ctx.createGain(); bus.gain.value = 0.55;
+      const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
+      const master = ctx.createGain(); master.gain.value = 0.75;
+      bus.connect(comp); comp.connect(master); master.connect(ctx.destination);
+      bus._master = master;
+      gL = guitarChain(-0.55); gR = guitarChain(0.55);
+      bass = ctx.createGain(); bass.gain.value = 0.5;
+      const bl = ctx.createBiquadFilter(); bl.type = "lowpass"; bl.frequency.value = 420; bass.connect(bl); bl.connect(bus);
+      const beat = 60 / 66, t0 = ctx.currentTime + 0.12;
+      score().forEach(e => chord(t0 + e.beat*beat, e.root, e.dur*beat, e.opt));
+      drums(t0, beat);
+      master.gain.setValueAtTime(0.75, t0 + 52*beat); master.gain.linearRampToValueAtTime(0.0001, t0 + 55*beat);
+    } catch {}
+  }
+  function stop() {
+    if (!ctx || !bus) return;
+    const m = bus._master, t = ctx.currentTime;
+    try { m.gain.cancelScheduledValues(t); m.gain.setValueAtTime(m.gain.value, t); m.gain.linearRampToValueAtTime(0.0001, t + 0.4); const old = m; setTimeout(() => old.disconnect(), 600); } catch {}
+    bus = null;
+  }
+  return {play, stop};
+})();
+
+const soundOn = () => store.get("druglord.sound") !== false;
+$("snd").checked = soundOn();
+$("snd").onchange = e => { store.set("druglord.sound", e.target.checked); if (!e.target.checked) Music.stop(); };
+
+/* ---------- the opening warning ---------- */
+function splash() {
+  return dialog("Drug Lord", 470, (b, close, box) => {
+    box.dataset.esc = "off";
+    const paintWarn = () => {
+      b.replaceChildren(
+        h("div", {class: "docs sunken", style: "max-height:none"},
+          h("p", {style: "text-align:center;font-size:22px;font-weight:bold;color:var(--title);margin:4px 0 2px;letter-spacing:1px"}, "DRUG LORD"),
+          h("p", {style: "text-align:center;margin-bottom:12px", class: "tag"}, "version 2.2, rebuilt for the browser"),
+          h("h3", {style: "color:var(--bad)"}, "WARNING!"),
+          h("p", {}, "Some people will find this game offensive. You play a drug dealer: you buy and sell drugs, and sometimes you kill whoever gets in your way. If that's not for you, click Don't Play now."),
+          h("h3", {style: "color:var(--bad)"}, "AN EVEN MORE IMPORTANT WARNING!"),
+          h("p", {style: "font-weight:bold"}, "Don't sell drugs. Don't buy drugs. And never, ever use drugs.")),
+        h("div", {class: "row end"},
+          btn("Play", () => { if (soundOn()) Music.play(); close(true); }, {focus: true}),
+          btn("Don't Play", paintBye)));
+      setTimeout(() => b.querySelector(".btn")?.focus(), 0);
+    };
+    const paintBye = () => {
+      b.replaceChildren(h("div", {class: "msg big"}, "Fair enough. The game will be here if you change your mind."),
+        h("div", {class: "row end"}, btn("Back", paintWarn, {focus: true})));
+      setTimeout(() => b.querySelector(".btn")?.focus(), 0);
+    };
+    paintWarn();
+  });
+}
+
+function start(data) {
+  const saved = (data && data.save && JSON.parse(data.save)) || store.get(SAVE);
+  if (saved && saved.v === 2 && saved.market) game = new Game(saved, ui);
+  render();
+  if (!data || !data.save) splash();
+}
+window.claude?.hot?.snapshot?.(() => ({save: game ? JSON.stringify(game.s) : null}));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>
